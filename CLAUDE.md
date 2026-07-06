@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Web + mobile (PWA) app for Xıdırlı village, Ağdam district, Azerbaijan — a "digital home" combining the village's historical memory (occupation 1993–2020, liberation, rebuilding), live information (weather, duty rosters, news), an interactive map, and future marketplace/community modules. The full requirements are in `xidirli-kend-app-prompt.md`; the approved architecture/roadmap plan lives at `C:\Users\Elmar\.claude\plans\xidirli-kend-app-prompt-md-bu-s-n-dd-ki-piped-sparrow.md`. Phase 1 (MVP) is partially done; remaining Phase 1 work: Supabase wiring, `/admin` panel, FCM push, Azure TTS audio cache.
+Web + mobile (PWA) app for Xıdırlı village, Ağdam district, Azerbaijan — a "digital home" combining the village's historical memory (occupation 1993–2020, liberation, rebuilding), live information (weather, duty rosters, news), an interactive map, and future marketplace/community modules. The full requirements are in `xidirli-kend-app-prompt.md`; the approved architecture/roadmap plan is in `docs/PLAN.md`. Phase 1 (MVP) is partially done; remaining Phase 1 work: Supabase wiring, `/admin` panel, FCM push, Azure TTS audio cache.
 
 **All UI text is Azerbaijani.** Communication with the project owner is also in Azerbaijani.
 
