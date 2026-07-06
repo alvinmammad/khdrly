@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import type { Metadata } from "next";
 import Link from "next/link";
 import TtsButton from "@/components/ui/TtsButton";
@@ -38,6 +40,9 @@ const SECTIONS: { title: string; icon: string; body: string; note?: string }[] =
 
 export default function HistoryPage() {
   const fullText = SECTIONS.map((s) => `${s.title}. ${s.body}`).join(" ");
+  // Azure TTS audio varsa (scripts/tts.mjs ilə yaradılır) onu üstün tut;
+  // mətn dəyişəndə content/tts/tarix.txt də yenilənməlidir
+  const hasAudio = existsSync(path.join(process.cwd(), "public", "audio", "tarix.mp3"));
 
   return (
     <div className="space-y-5">
@@ -46,7 +51,7 @@ export default function HistoryPage() {
       </Link>
       <h1 className="font-heading text-2xl font-bold">Kəndin tarixi</h1>
 
-      <TtsButton text={fullText} />
+      <TtsButton text={fullText} audioSrc={hasAudio ? "/audio/tarix.mp3" : undefined} />
 
       <div className="space-y-4">
         {SECTIONS.map((s) => (

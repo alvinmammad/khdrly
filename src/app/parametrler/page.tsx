@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { DEFAULT_PREFS, readPrefs, savePrefs, type Prefs } from "@/lib/prefs";
+import PushSettings from "./PushSettings";
 
 /** Əlçatanlıq parametrləri — böyük, sadə idarəetmələr */
 export default function SettingsPage() {
@@ -132,6 +133,8 @@ export default function SettingsPage() {
           </button>
         </div>
       </section>
+
+      <PushSettings />
 
       <p className="text-sm text-ink-soft">
         Seçimləriniz bu cihazda yadda saxlanılır və tətbiqi hər açanda tətbiq olunur.

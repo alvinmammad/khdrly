@@ -19,3 +19,40 @@ const serwist = new Serwist({
 });
 
 serwist.addEventListeners();
+
+/* ---------- Web Push bildirişləri ---------- */
+
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
+  let payload: { title?: string; body?: string; url?: string };
+  try {
+    payload = event.data.json();
+  } catch {
+    payload = { body: event.data.text() };
+  }
+  event.waitUntil(
+    self.registration.showNotification(payload.title ?? "Xıdırlı", {
+      body: payload.body ?? "",
+      icon: "/icon.svg",
+      badge: "/icon.svg",
+      lang: "az",
+      data: { url: payload.url ?? "/" },
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = (event.notification.data?.url as string) ?? "/";
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+      for (const client of clients) {
+        if ("focus" in client) {
+          client.navigate(url);
+          return client.focus();
+        }
+      }
+      return self.clients.openWindow(url);
+    })
+  );
+});
