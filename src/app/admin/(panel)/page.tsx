@@ -14,7 +14,12 @@ async function countRows(table: string): Promise<number> {
   return count ?? 0;
 }
 
-export default async function AdminHomePage() {
+export default async function AdminHomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ xeta?: string }>;
+}) {
+  const { xeta } = await searchParams;
   const [news, events, duty, places, martyrs] = await Promise.all([
     countRows("news"),
     countRows("events"),
@@ -28,12 +33,17 @@ export default async function AdminHomePage() {
     { href: "/admin/tedbirler", icon: "📅", label: "Tədbirlər", count: events, ready: true },
     { href: "/admin/novbetci", icon: "🔔", label: "Növbətçi məlumatlar", count: duty, ready: true },
     { href: "/admin/yerler", icon: "🗺️", label: "Xəritə yerləri", count: places, ready: true },
-    { href: "#", icon: "🕯️", label: "Şəhidlər", count: martyrs, ready: false },
+    { href: "/admin/sehidler", icon: "🕯️", label: "Şəhidlər", count: martyrs, ready: true },
   ];
 
   return (
     <div className="space-y-5">
       <h1 className="font-heading text-2xl font-bold">İdarəetmə paneli</h1>
+      {xeta === "yalniz-admin" && (
+        <p role="alert" className="rounded-xl border border-nar bg-nar/10 p-3 font-medium">
+          Şəhidlər bölməsini yalnız admin rolu olan istifadəçilər idarə edə bilər.
+        </p>
+      )}
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {tiles.map((t) => (
           <li key={t.label}>

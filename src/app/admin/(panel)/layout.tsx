@@ -16,6 +16,7 @@ const NAV = [
   { href: "/admin/tedbirler", label: "Tədbirlər" },
   { href: "/admin/novbetci", label: "Növbətçi" },
   { href: "/admin/yerler", label: "Xəritə" },
+  { href: "/admin/sehidler", label: "Şəhidlər" },
 ];
 
 export default async function AdminPanelLayout({
