@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+/*
+  Xıdırlı dizayn tokenləri — isti torpaq, nar, günəbaxan palitrası.
+  Semantik dəyişənlər tema/kontrast rejimlərində dəyişir; Tailwind
+  sinifləri (bg-bg, text-ink və s.) bunlara bağlanıb.
+*/
+:root {
+  --bg: #f6efe2;
+  --surface: #fdfbf6;
+  --surface-2: #efe4cf;
+  --ink: #33261d;
+  --ink-soft: #6b5849;
+  --line: #e3d6bf;
+  --kerpic: #b5542d;
+  --kerpic-strong: #93411f;
+  --nar: #8e2a3a;
+  --gunebaxan: #e8a93c;
+  --zeytun: #5a6b3f;
+  --sos: #b3261e;
+  --on-accent: #fffaf2;
+}
+
+[data-theme="dark"] {
+  --bg: #201914;
+  --surface: #2a211a;
+  --surface-2: #362b21;
+  --ink: #f3eadc;
+  --ink-soft: #c9b8a6;
+  --line: #4a3d31;
+  --kerpic: #cd6a3e;
+  --kerpic-strong: #b5542d;
+  --nar: #b04a5c;
+  --gunebaxan: #e8b25a;
+  --zeytun: #8ba065;
+  --sos: #d64a41;
+}
+
+/* Yüksək kontrast — "asan oxu" rejimi */
+[data-contrast="high"] {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f2f2f2;
+  --ink: #000000;
+  --ink-soft: #1a1a1a;
+  --line: #000000;
+  --kerpic: #8a3410;
+  --kerpic-strong: #6e2a0d;
+  --nar: #6d1020;
+  --gunebaxan: #7a5200;
+  --zeytun: #33421c;
+  --sos: #a10e06;
+}
+
+[data-theme="dark"][data-contrast="high"] {
+  --bg: #000000;
+  --surface: #000000;
+  --surface-2: #141414;
+  --ink: #ffffff;
+  --ink-soft: #e6e6e6;
+  --line: #ffffff;
+  --kerpic: #ff9c6b;
+  --kerpic-strong: #ffb08a;
+  --nar: #ff8fa0;
+  --gunebaxan: #ffd27a;
+  --zeytun: #b9d08e;
+  --sos: #ff6b61;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-kerpic: var(--kerpic);
+  --color-kerpic-strong: var(--kerpic-strong);
+  --color-nar: var(--nar);
+  --color-gunebaxan: var(--gunebaxan);
+  --color-zeytun: var(--zeytun);
+  --color-sos: var(--sos);
+  --color-on-accent: var(--on-accent);
+  --font-heading: var(--font-lora), Georgia, serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Baza şrift 18px (yaşlı istifadəçilər üçün); A−/A+ pilləkəni */
+html { font-size: 112.5%; }
+html[data-fontscale="0"] { font-size: 100%; }
+html[data-fontscale="1"] { font-size: 112.5%; }
+html[data-fontscale="2"] { font-size: 128%; }
+html[data-fontscale="3"] { font-size: 145%; }
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1.6;
+}
+
+/* Sadə görünüş: plitələr tək sütuna keçir, ikinci dərəcəli bloklar gizlənir */
+html[data-simple="1"] .tile-grid { grid-template-columns: 1fr !important; }
+html[data-simple="1"] .simple-hide { display: none !important; }
+
+/* Xalça naxışından ilhamlanan incə bölücü ornament */
+.carpet-divider {
+  height: 8px;
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--kerpic) 0 6px,
+    transparent 6px 12px,
+    var(--gunebaxan) 12px 18px,
+    transparent 18px 24px
+  );
+  opacity: 0.55;
+  border-radius: 999px;
+}
+
+/* Şəhidlər bölməsi — ayrıca, ləyaqətli vizual kimlik (animasiyasız) */
+.memorial-scope {
+  --bg: #1f2a24;
+  --surface: #26332c;
+  --surface-2: #2e3d35;
+  --ink: #f2efe6;
+  --ink-soft: #c2bfae;
+  --line: #3e4f45;
+  --kerpic: #c9a227;
+  --kerpic-strong: #b08d1e;
+}
+.memorial-scope * { transition: none !important; animation: none !important; }
+
+/* Arxiv (işğal dövrü) bölməsi — sepiya/sənədli ton */
+.archive-scope {
+  --bg: #2e2a24;
+  --surface: #383229;
+  --surface-2: #423b30;
+  --ink: #eae3d2;
+  --ink-soft: #bdb29a;
+  --line: #55492f;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
