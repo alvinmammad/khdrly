@@ -4,6 +4,8 @@ import { getMartyrs } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Şəhidlərimiz" };
 
+export const revalidate = 300;
+
 export default async function MartyrsPage() {
   const martyrs = await getMartyrs();
   const hasOnlySamples = martyrs.every((m) => m.isSample);

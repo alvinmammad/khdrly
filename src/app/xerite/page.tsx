@@ -7,6 +7,8 @@ import type { PlaceType } from "@/lib/data/types";
 
 export const metadata: Metadata = { title: "Xəritə" };
 
+export const revalidate = 300;
+
 export default async function MapPage() {
   const places = await getPlaces();
   const usedTypes = [...new Set(places.map((p) => p.type))] as PlaceType[];

@@ -4,6 +4,8 @@ import TtsButton from "@/components/ui/TtsButton";
 import { getNews, getNewsItem } from "@/lib/data";
 import { formatDate } from "@/lib/format";
 
+export const revalidate = 300;
+
 export async function generateStaticParams() {
   const news = await getNews();
   return news.map((n) => ({ id: n.id }));

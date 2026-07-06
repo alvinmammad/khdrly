@@ -4,6 +4,8 @@ import type { DutyType } from "@/lib/data/types";
 
 export const metadata: Metadata = { title: "Növbətçi məlumatlar" };
 
+export const revalidate = 300;
+
 const TYPE_META: Record<DutyType, { icon: string; label: string }> = {
   aptek: { icon: "💊", label: "Aptek" },
   feldser: { icon: "🩺", label: "Feldşer" },

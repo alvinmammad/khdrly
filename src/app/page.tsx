@@ -5,6 +5,9 @@ import DutyBanner from "@/components/home/DutyBanner";
 import { getNews, getUpcomingEvents } from "@/lib/data";
 import { formatDate, formatDateTime } from "@/lib/format";
 
+// Supabase-dəki yeniliklər build olmadan görünsün (ISR)
+export const revalidate = 300;
+
 export default async function HomePage() {
   const [news, events] = await Promise.all([getNews(), getUpcomingEvents()]);
   const today = new Intl.DateTimeFormat("az-Latn-AZ", {

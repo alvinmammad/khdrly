@@ -5,6 +5,8 @@ import { formatDate } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Xəbərlər" };
 
+export const revalidate = 300;
+
 export default async function NewsPage() {
   const news = await getNews();
 

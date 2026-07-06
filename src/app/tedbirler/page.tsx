@@ -4,6 +4,8 @@ import { formatDateTime, formatWeekday } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Tədbirlər" };
 
+export const revalidate = 300;
+
 export default async function EventsPage() {
   const events = await getUpcomingEvents();
 
