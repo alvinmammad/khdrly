@@ -9,6 +9,7 @@ import {
   mockPlaces,
   mockProducers,
   mockProducts,
+  mockTimeline,
 } from "./mock";
 import type {
   DutyInfo,
@@ -19,6 +20,8 @@ import type {
   Place,
   Producer,
   Product,
+  TimelineEntry,
+  TimelineEra,
 } from "./types";
 
 /*
@@ -429,4 +432,50 @@ export async function getListings(): Promise<Listing[]> {
     phone: r.phone ?? undefined,
     createdAt: r.created_at,
   }));
+}
+
+// ---------- Timeline (işğal / azadlıq / bərpa) ----------
+
+interface TimelineRow {
+  id: string;
+  era: TimelineEra;
+  event_date: string;
+  date_display: string | null;
+  title: string;
+  body: string;
+  photo_url: string | null;
+  sources: string[];
+}
+
+function timelineFromRow(r: TimelineRow): TimelineEntry {
+  return {
+    id: r.id,
+    era: r.era,
+    eventDate: r.event_date,
+    dateDisplay: r.date_display ?? undefined,
+    title: r.title,
+    body: r.body,
+    photoUrl: r.photo_url ?? undefined,
+    sources: r.sources ?? [],
+  };
+}
+
+export async function getTimeline(eras: TimelineEra[]): Promise<TimelineEntry[]> {
+  const sb = getSupabase();
+  if (!sb) {
+    return mockTimeline
+      .filter((t) => eras.includes(t.era))
+      .sort((a, b) => a.eventDate.localeCompare(b.eventDate));
+  }
+  const { data, error } = await sb
+    .from("timeline_entries")
+    .select("id, era, event_date, date_display, title, body, photo_url, sources")
+    .eq("status", "approved")
+    .in("era", eras)
+    .order("event_date", { ascending: true });
+  if (error) {
+    logError("getTimeline", error.message);
+    return [];
+  }
+  return (data as TimelineRow[]).map(timelineFromRow);
 }

@@ -65,6 +65,23 @@ export default function HistoryPage() {
         ))}
       </div>
 
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Link
+          href="/haqqinda/isgal-dovru"
+          className="rounded-2xl border border-line bg-surface p-4 active:bg-surface-2"
+        >
+          <p className="font-bold">🕯️ İşğal dövrü arxivi</p>
+          <p className="mt-1 text-sm text-ink-soft">Xronologiya və yaddaş →</p>
+        </Link>
+        <Link
+          href="/haqqinda/azadliq"
+          className="rounded-2xl border border-line bg-surface p-4 active:bg-surface-2"
+        >
+          <p className="font-bold">🇦🇿 Azadlıq və Bərpa</p>
+          <p className="mt-1 text-sm text-ink-soft">Zaman xətti →</p>
+        </Link>
+      </div>
+
       <div className="rounded-2xl border-2 border-gunebaxan bg-gunebaxan/10 p-4">
         <p className="font-bold">📢 Xatirələrinizi gözləyirik</p>
         <p className="mt-1 text-ink-soft">

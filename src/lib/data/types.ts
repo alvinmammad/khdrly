@@ -96,6 +96,19 @@ export interface Listing {
   createdAt: string; // ISO
 }
 
+export type TimelineEra = "isgal" | "azadliq" | "berpa";
+
+export interface TimelineEntry {
+  id: string;
+  era: TimelineEra;
+  eventDate: string; // ISO date (sıralama)
+  dateDisplay?: string; // ekran üçün (məs. "1993, iyul")
+  title: string;
+  body: string;
+  photoUrl?: string;
+  sources: string[];
+}
+
 export interface Martyr {
   id: string;
   fullName: string;

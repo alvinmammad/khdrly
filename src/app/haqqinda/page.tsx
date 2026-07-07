@@ -52,6 +52,26 @@ export default function AboutPage() {
           </span>
         </Link>
         <Link
+          href="/haqqinda/azadliq"
+          className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 shadow-sm active:bg-surface-2"
+        >
+          <span className="text-4xl" aria-hidden>🇦🇿</span>
+          <span>
+            <span className="block text-lg font-bold">Azadlıq və Bərpa</span>
+            <span className="text-ink-soft">Böyük Qayıdışın zaman xətti</span>
+          </span>
+        </Link>
+        <Link
+          href="/haqqinda/isgal-dovru"
+          className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 shadow-sm active:bg-surface-2"
+        >
+          <span className="text-4xl" aria-hidden>🕯️</span>
+          <span>
+            <span className="block text-lg font-bold">İşğal dövrü</span>
+            <span className="text-ink-soft">1993–2020 yaddaş arxivi</span>
+          </span>
+        </Link>
+        <Link
           href="/haqqinda/brend"
           className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 shadow-sm active:bg-surface-2"
         >

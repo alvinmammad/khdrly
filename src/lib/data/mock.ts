@@ -7,6 +7,7 @@ import type {
   Place,
   Producer,
   Product,
+  TimelineEntry,
 } from "./types";
 
 /*
@@ -183,5 +184,38 @@ export const mockListings: Listing[] = [
     body: "Kəndin şimal tərəfində qonur dana itib, qulağında sarı nişan var. Görən olsa xahiş edirik zəng etsin. Nümunə elan.",
     phone: "+994500000004",
     createdAt: "2026-07-06T18:00:00+04:00",
+  },
+];
+
+// Timeline — 1993 və 2020 tarixləri rəsmi, hamıya məlum faktlardır;
+// kəndə xas tarixlər (açılış və s.) NÜMUNƏDİR və admin paneldən
+// dəqiq mənbə ilə daxil ediləcək.
+export const mockTimeline: TimelineEntry[] = [
+  {
+    id: "t1",
+    era: "isgal",
+    eventDate: "1993-07-23",
+    dateDisplay: "1993, 23 iyul",
+    title: "Ağdamın işğalı",
+    body: "Birinci Qarabağ müharibəsi zamanı Ağdam rayonunun böyük hissəsi, o cümlədən Xıdırlı kəndi işğal olundu. Sakinlər doğma yurdlarını tərk etməyə məcbur oldular.",
+    sources: ["Rəsmi dövlət xronikası"],
+  },
+  {
+    id: "t2",
+    era: "azadliq",
+    eventDate: "2020-11-20",
+    dateDisplay: "2020, 20 noyabr",
+    title: "Ağdam Azərbaycana qaytarıldı",
+    body: "44 günlük Vətən müharibəsinin nəticəsi olaraq imzalanmış üçtərəfli bəyanata əsasən Ağdam rayonu işğaldan azad edildi. 27 illik həsrət sona çatdı.",
+    sources: ["Üçtərəfli bəyanat, 10 noyabr 2020"],
+  },
+  {
+    id: "t3",
+    era: "berpa",
+    eventDate: "2024-01-01",
+    dateDisplay: "Bərpa dövrü",
+    title: "Böyük Qayıdış: kəndin yenidən qurulması (nümunə)",
+    body: "\"Böyük Qayıdış\" proqramı çərçivəsində kənddə yollar, elektrik, su təchizatı və evlər tikilir. Dəqiq tarixlər admin paneldən rəsmi mənbələrlə daxil ediləcək — bu, nümunə yazıdır.",
+    sources: [],
   },
 ];
