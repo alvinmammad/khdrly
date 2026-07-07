@@ -1,6 +1,7 @@
 import type {
   DutyInfo,
   EventItem,
+  Listing,
   Martyr,
   NewsItem,
   Place,
@@ -163,5 +164,24 @@ export const mockProducts: Product[] = [
     seasonEnd: 10,
     available: true,
     producer: mockProducerBag,
+  },
+];
+
+export const mockListings: Listing[] = [
+  {
+    id: "e1",
+    type: "elan",
+    title: "Ev təsərrüfatı üçün bal arısı ailəsi satılır",
+    body: "İki arı ailəsi, yeşikləri ilə birlikdə. Qiymət razılaşma ilə. Nümunə elan.",
+    phone: "+994500000003",
+    createdAt: "2026-07-05T10:00:00+04:00",
+  },
+  {
+    id: "e2",
+    type: "itmis",
+    title: "Qonur rəngli dana itib",
+    body: "Kəndin şimal tərəfində qonur dana itib, qulağında sarı nişan var. Görən olsa xahiş edirik zəng etsin. Nümunə elan.",
+    phone: "+994500000004",
+    createdAt: "2026-07-06T18:00:00+04:00",
   },
 ];

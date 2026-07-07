@@ -85,6 +85,17 @@ export interface Product {
   producer: Producer;
 }
 
+export type ListingType = "elan" | "itmis" | "tapilmis";
+
+export interface Listing {
+  id: string;
+  type: ListingType;
+  title: string;
+  body: string;
+  phone?: string;
+  createdAt: string; // ISO
+}
+
 export interface Martyr {
   id: string;
   fullName: string;

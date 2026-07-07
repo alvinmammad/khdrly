@@ -4,6 +4,7 @@ import {
   mockDuty,
   mockEvents,
   mockMartyrs,
+  mockListings,
   mockNews,
   mockPlaces,
   mockProducers,
@@ -12,6 +13,7 @@ import {
 import type {
   DutyInfo,
   EventItem,
+  Listing,
   Martyr,
   NewsItem,
   Place,
@@ -390,4 +392,41 @@ export async function getFlagshipProducers(): Promise<Producer[]> {
     return [];
   }
   return (data as ProducerRow[]).map(producerFromRow);
+}
+
+// ---------- Elanlar ----------
+
+interface ListingRow {
+  id: string;
+  type: Listing["type"];
+  title: string;
+  body: string;
+  phone: string | null;
+  created_at: string;
+}
+
+export async function getListings(): Promise<Listing[]> {
+  const sb = getSupabase();
+  if (!sb) {
+    return [...mockListings].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
+  const now = new Date().toISOString();
+  const { data, error } = await sb
+    .from("listings")
+    .select("id, type, title, body, phone, created_at")
+    .eq("status", "approved")
+    .or(`valid_to.is.null,valid_to.gte.${now}`)
+    .order("created_at", { ascending: false });
+  if (error) {
+    logError("getListings", error.message);
+    return [];
+  }
+  return (data as ListingRow[]).map((r) => ({
+    id: r.id,
+    type: r.type,
+    title: r.title,
+    body: r.body,
+    phone: r.phone ?? undefined,
+    createdAt: r.created_at,
+  }));
 }
