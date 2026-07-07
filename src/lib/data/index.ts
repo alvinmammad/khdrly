@@ -9,7 +9,9 @@ import {
   mockPlaces,
   mockProducers,
   mockProducts,
+  mockServices,
   mockTimeline,
+  mockTransport,
 } from "./mock";
 import type {
   DutyInfo,
@@ -21,8 +23,10 @@ import type {
   Producer,
   Product,
   MediaItem,
+  ServiceProvider,
   TimelineEntry,
   TimelineEra,
+  TransportRoute,
 } from "./types";
 
 /*
@@ -517,5 +521,71 @@ export async function getMediaItems(): Promise<MediaItem[]> {
     takenPeriod: r.taken_period ?? undefined,
     url: mediaPublicUrl(r.storage_path),
     uploaderName: r.uploader_name ?? undefined,
+  }));
+}
+
+// ---------- Xidmətlər ----------
+
+interface ServiceRow {
+  id: string;
+  name: string;
+  category: ServiceProvider["category"];
+  phone: string;
+  description: string | null;
+}
+
+export async function getServices(): Promise<ServiceProvider[]> {
+  const sb = getSupabase();
+  if (!sb) return mockServices;
+  const { data, error } = await sb
+    .from("service_providers")
+    .select("id, name, category, phone, description")
+    .eq("status", "approved")
+    .order("category")
+    .order("name");
+  if (error) {
+    logError("getServices", error.message);
+    return [];
+  }
+  return (data as ServiceRow[]).map((r) => ({
+    id: r.id,
+    name: r.name,
+    category: r.category,
+    phone: r.phone,
+    description: r.description ?? undefined,
+  }));
+}
+
+// ---------- Nəqliyyat ----------
+
+interface TransportRow {
+  id: string;
+  title: string;
+  schedule: string;
+  driver_name: string | null;
+  phone: string | null;
+  note: string | null;
+}
+
+export async function getTransportRoutes(): Promise<TransportRoute[]> {
+  const sb = getSupabase();
+  if (!sb) return mockTransport;
+  const { data, error } = await sb
+    .from("transport_routes")
+    .select("id, title, schedule, driver_name, phone, note")
+    .eq("status", "approved")
+    .order("sort_order")
+    .order("title");
+  if (error) {
+    logError("getTransportRoutes", error.message);
+    return [];
+  }
+  return (data as TransportRow[]).map((r) => ({
+    id: r.id,
+    title: r.title,
+    schedule: r.schedule,
+    driverName: r.driver_name ?? undefined,
+    phone: r.phone ?? undefined,
+    note: r.note ?? undefined,
   }));
 }

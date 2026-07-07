@@ -20,18 +20,22 @@ export default async function AdminHomePage({
   searchParams: Promise<{ xeta?: string }>;
 }) {
   const { xeta } = await searchParams;
-  const [news, events, duty, places, martyrs, products, listings, timeline, media] =
-    await Promise.all([
-      countRows("news"),
-      countRows("events"),
-      countRows("duty_info"),
-      countRows("places"),
-      countRows("martyrs"),
-      countRows("products"),
-      countRows("listings"),
-      countRows("timeline_entries"),
-      countRows("media_items"),
-    ]);
+  const [
+    news, events, duty, places, martyrs, products, listings, timeline, media,
+    services, routes,
+  ] = await Promise.all([
+    countRows("news"),
+    countRows("events"),
+    countRows("duty_info"),
+    countRows("places"),
+    countRows("martyrs"),
+    countRows("products"),
+    countRows("listings"),
+    countRows("timeline_entries"),
+    countRows("media_items"),
+    countRows("service_providers"),
+    countRows("transport_routes"),
+  ]);
 
   const tiles = [
     { href: "/admin/xeberler", icon: "📰", label: "Xəbərlər", count: news, ready: true },
@@ -43,6 +47,8 @@ export default async function AdminHomePage({
     { href: "/admin/elanlar", icon: "📢", label: "Elanlar", count: listings, ready: true },
     { href: "/admin/tarix", icon: "📜", label: "Tarix xronologiyası", count: timeline, ready: true },
     { href: "/admin/media", icon: "🖼️", label: "Media arxivi", count: media, ready: true },
+    { href: "/admin/xidmetler", icon: "🔧", label: "Xidmətlər", count: services, ready: true },
+    { href: "/admin/neqliyyat", icon: "🚌", label: "Nəqliyyat", count: routes, ready: true },
   ];
 
   return (

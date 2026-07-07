@@ -109,6 +109,33 @@ export interface TimelineEntry {
   sources: string[];
 }
 
+export type ServiceCategory =
+  | "usta"
+  | "elektrik"
+  | "santexnik"
+  | "berber"
+  | "taksi"
+  | "toy"
+  | "texnika"
+  | "diger";
+
+export interface ServiceProvider {
+  id: string;
+  name: string;
+  category: ServiceCategory;
+  phone: string;
+  description?: string;
+}
+
+export interface TransportRoute {
+  id: string;
+  title: string;
+  schedule: string;
+  driverName?: string;
+  phone?: string;
+  note?: string;
+}
+
 export interface MediaItem {
   id: string;
   title: string;

@@ -7,7 +7,9 @@ import type {
   Place,
   Producer,
   Product,
+  ServiceProvider,
   TimelineEntry,
+  TransportRoute,
 } from "./types";
 
 /*
@@ -217,5 +219,34 @@ export const mockTimeline: TimelineEntry[] = [
     title: "Böyük Qayıdış: kəndin yenidən qurulması (nümunə)",
     body: "\"Böyük Qayıdış\" proqramı çərçivəsində kənddə yollar, elektrik, su təchizatı və evlər tikilir. Dəqiq tarixlər admin paneldən rəsmi mənbələrlə daxil ediləcək — bu, nümunə yazıdır.",
     sources: [],
+  },
+];
+
+// Xidmətlər və nəqliyyat — NÜMUNƏ (adlar/nömrələr saxtadır)
+export const mockServices: ServiceProvider[] = [
+  {
+    id: "s1",
+    name: "Nümunə usta",
+    category: "usta",
+    phone: "+994500000005",
+    description: "Tikinti və təmir işləri. Nümunə kart.",
+  },
+  {
+    id: "s2",
+    name: "Nümunə taksi",
+    category: "taksi",
+    phone: "+994500000006",
+    description: "Kənd–Ağdam istiqaməti. Nümunə kart.",
+  },
+];
+
+export const mockTransport: TransportRoute[] = [
+  {
+    id: "n1",
+    title: "Xıdırlı → Ağdam",
+    schedule: "Hər gün səhər 08:00 və günorta 14:00 (nümunə cədvəl)",
+    driverName: "Nümunə sürücü",
+    phone: "+994500000007",
+    note: "Dəqiq cədvəl admin paneldən daxil ediləcək.",
   },
 ];
