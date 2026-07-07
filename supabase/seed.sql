@@ -73,3 +73,24 @@ insert into public.places (slug, name, type, lat, lng, body, status) values
 ('saglamliq',     'Sağlamlıq məntəqəsi',    'saglamliq',     40.0162, 46.8934, 'Feldşer-mama məntəqəsi. Növbətçi məlumatı üçün Canlı bölməyə baxın.', 'approved'),
 ('qebiristanliq', 'Kənd qəbiristanlığı',    'qebiristanliq', 40.0189, 46.8862, null, 'approved'),
 ('magaza',        'Kənd mağazası',          'magaza',        40.0154, 46.8899, null, 'approved');
+
+-- ---------- Bazar (Modul 11 v1) — NÜMUNƏ məzmun ----------
+-- Adlar/nömrələr qəsdən saxtadır; real istehsalçılar admin paneldən daxil ediləcək.
+insert into public.producers (name, phone, description, is_flagship, status) values
+(
+  'Nümunə təsərrüfat (qaymaq)', '+994500000001',
+  'Xıdırlı qaymağı — kəndin brend məhsulu. Nümunə istehsalçı kartı.',
+  true, 'approved'
+),
+(
+  'Nümunə bağ təsərrüfatı', '+994500000002', null, false, 'approved'
+);
+
+insert into public.products (producer_id, name, category, price, unit, description, season_start, season_end, available, status)
+select p.id, x.name, x.category::public.product_category, x.price, x.unit, x.description, x.season_start, x.season_end, true, 'approved'
+from (values
+  ('Nümunə təsərrüfat (qaymaq)', 'Xıdırlı qaymağı', 'sud', 12.00, 'kq', 'Səhər sağımından, təbii qaymaq. Nümunə məhsul kartı.', null::smallint, null::smallint),
+  ('Nümunə təsərrüfat (qaymaq)', 'Motal pendiri', 'sud', null, 'kq', null, null, null),
+  ('Nümunə bağ təsərrüfatı', 'Mövsümi tərəvəz səbəti', 'terevez', 8.00, 'səbət', null, 5::smallint, 10::smallint)
+) as x(producer_name, name, category, price, unit, description, season_start, season_end)
+join public.producers p on p.name = x.producer_name;

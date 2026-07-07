@@ -20,12 +20,13 @@ export default async function AdminHomePage({
   searchParams: Promise<{ xeta?: string }>;
 }) {
   const { xeta } = await searchParams;
-  const [news, events, duty, places, martyrs] = await Promise.all([
+  const [news, events, duty, places, martyrs, products] = await Promise.all([
     countRows("news"),
     countRows("events"),
     countRows("duty_info"),
     countRows("places"),
     countRows("martyrs"),
+    countRows("products"),
   ]);
 
   const tiles = [
@@ -34,6 +35,7 @@ export default async function AdminHomePage({
     { href: "/admin/novbetci", icon: "🔔", label: "Növbətçi məlumatlar", count: duty, ready: true },
     { href: "/admin/yerler", icon: "🗺️", label: "Xəritə yerləri", count: places, ready: true },
     { href: "/admin/sehidler", icon: "🕯️", label: "Şəhidlər", count: martyrs, ready: true },
+    { href: "/admin/bazar", icon: "🧺", label: "Bazar", count: products, ready: true },
   ];
 
   return (

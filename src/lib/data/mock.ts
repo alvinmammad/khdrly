@@ -1,4 +1,12 @@
-import type { DutyInfo, EventItem, Martyr, NewsItem, Place } from "./types";
+import type {
+  DutyInfo,
+  EventItem,
+  Martyr,
+  NewsItem,
+  Place,
+  Producer,
+  Product,
+} from "./types";
 
 /*
   NÜMUNƏ MƏLUMATLAR — Supabase qoşulana qədər tətbiqin işlək görünməsi üçün.
@@ -104,5 +112,56 @@ export const mockMartyrs: Martyr[] = [
     fullName: "Nümunə profil",
     bio: "Bu, dizayn nümunəsidir. Real şəhid məlumatları yalnız ailə nümayəndəsinin yazılı razılığı və faktların rəsmi mənbələrlə təsdiqindən sonra admin panelindən daxil ediləcək.",
     isSample: true,
+  },
+];
+
+// Bazar nümunələri — adlar/nömrələr QƏSDƏN saxtadır; real istehsalçılar
+// admin paneldən (gələcəkdə öz hesabları ilə) daxil ediləcək.
+const mockProducerQaymaq: Producer = {
+  id: "p1",
+  name: "Nümunə təsərrüfat (qaymaq)",
+  phone: "+994500000001",
+  description: "Xıdırlı qaymağı — kəndin brend məhsulu. Nümunə istehsalçı kartı.",
+  isFlagship: true,
+};
+
+const mockProducerBag: Producer = {
+  id: "p2",
+  name: "Nümunə bağ təsərrüfatı",
+  phone: "+994500000002",
+  isFlagship: false,
+};
+
+export const mockProducers: Producer[] = [mockProducerQaymaq, mockProducerBag];
+
+export const mockProducts: Product[] = [
+  {
+    id: "m1",
+    name: "Xıdırlı qaymağı",
+    category: "sud",
+    price: 12,
+    unit: "kq",
+    description: "Səhər sağımından, təbii qaymaq. Nümunə məhsul kartı.",
+    available: true,
+    producer: mockProducerQaymaq,
+  },
+  {
+    id: "m2",
+    name: "Motal pendiri",
+    category: "sud",
+    unit: "kq",
+    available: true,
+    producer: mockProducerQaymaq,
+  },
+  {
+    id: "m3",
+    name: "Mövsümi tərəvəz səbəti",
+    category: "terevez",
+    price: 8,
+    unit: "səbət",
+    seasonStart: 5,
+    seasonEnd: 10,
+    available: true,
+    producer: mockProducerBag,
   },
 ];

@@ -53,6 +53,38 @@ export interface Place {
   body?: string;
 }
 
+export type ProductCategory =
+  | "sud"
+  | "terevez"
+  | "meyve"
+  | "corek"
+  | "et"
+  | "bal"
+  | "el_isi"
+  | "diger";
+
+export interface Producer {
+  id: string;
+  name: string;
+  phone: string;
+  description?: string;
+  isFlagship: boolean; // qaymaq brendi bölməsində göstərilir
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  category: ProductCategory;
+  price?: number; // yoxdursa "qiymət razılaşma ilə"
+  unit?: string;
+  description?: string;
+  photoUrl?: string;
+  seasonStart?: number; // 1–12; yoxdursa bütün il
+  seasonEnd?: number;
+  available: boolean;
+  producer: Producer;
+}
+
 export interface Martyr {
   id: string;
   fullName: string;

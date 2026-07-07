@@ -1,6 +1,23 @@
 import { getSupabase } from "@/lib/supabase/client";
-import { mockDuty, mockEvents, mockMartyrs, mockNews, mockPlaces } from "./mock";
-import type { DutyInfo, EventItem, Martyr, NewsItem, Place } from "./types";
+import { inSeason } from "@/lib/bazarMeta";
+import {
+  mockDuty,
+  mockEvents,
+  mockMartyrs,
+  mockNews,
+  mockPlaces,
+  mockProducers,
+  mockProducts,
+} from "./mock";
+import type {
+  DutyInfo,
+  EventItem,
+  Martyr,
+  NewsItem,
+  Place,
+  Producer,
+  Product,
+} from "./types";
 
 /*
   Məlumat qatı. Supabase env dəyişənləri (.env.local) doludursa real
@@ -255,4 +272,122 @@ export async function getMartyr(id: string): Promise<Martyr | undefined> {
     return undefined;
   }
   return data ? martyrFromRow(data as MartyrRow) : undefined;
+}
+
+// ---------- Bazar (Modul 11 v1) ----------
+
+interface ProducerRow {
+  id: string;
+  name: string;
+  phone: string;
+  description: string | null;
+  is_flagship: boolean;
+}
+
+interface ProductRow {
+  id: string;
+  name: string;
+  category: Product["category"];
+  price: number | null;
+  unit: string | null;
+  description: string | null;
+  photo_url: string | null;
+  season_start: number | null;
+  season_end: number | null;
+  available: boolean;
+  producer: ProducerRow;
+}
+
+function producerFromRow(r: ProducerRow): Producer {
+  return {
+    id: r.id,
+    name: r.name,
+    phone: r.phone,
+    description: r.description ?? undefined,
+    isFlagship: r.is_flagship,
+  };
+}
+
+function productFromRow(r: ProductRow): Product {
+  return {
+    id: r.id,
+    name: r.name,
+    category: r.category,
+    price: r.price ?? undefined,
+    unit: r.unit ?? undefined,
+    description: r.description ?? undefined,
+    photoUrl: r.photo_url ?? undefined,
+    seasonStart: r.season_start ?? undefined,
+    seasonEnd: r.season_end ?? undefined,
+    available: r.available,
+    producer: producerFromRow(r.producer),
+  };
+}
+
+/** Bakı vaxtı ilə cari ay (1–12) — mövsümi avtomatika üçün. */
+function currentBakuMonth(): number {
+  return new Date(Date.now() + 4 * 60 * 60 * 1000).getUTCMonth() + 1;
+}
+
+const PRODUCT_SELECT =
+  "id, name, category, price, unit, description, photo_url, season_start, season_end, available, producer:producers!inner(id, name, phone, description, is_flagship)";
+
+/** Satışda olan və mövsümündə olan məhsullar (kataloq). */
+export async function getProducts(): Promise<Product[]> {
+  const month = currentBakuMonth();
+  const sb = getSupabase();
+  if (!sb) {
+    return mockProducts.filter(
+      (p) => p.available && inSeason(p.seasonStart, p.seasonEnd, month)
+    );
+  }
+  const { data, error } = await sb
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .eq("status", "approved")
+    .eq("available", true)
+    .eq("producer.status", "approved")
+    .order("category")
+    .order("name");
+  if (error) {
+    logError("getProducts", error.message);
+    return [];
+  }
+  return (data as unknown as ProductRow[])
+    .map(productFromRow)
+    .filter((p) => inSeason(p.seasonStart, p.seasonEnd, month));
+}
+
+export async function getProduct(id: string): Promise<Product | undefined> {
+  const sb = getSupabase();
+  if (!sb) return mockProducts.find((p) => p.id === id);
+  const { data, error } = await sb
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .eq("status", "approved")
+    .eq("producer.status", "approved")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) {
+    logError("getProduct", error.message);
+    return undefined;
+  }
+  return data ? productFromRow(data as unknown as ProductRow) : undefined;
+}
+
+/** Qaymaq brendi bölməsi üçün flaqman istehsalçılar. */
+export async function getFlagshipProducers(): Promise<Producer[]> {
+  const sb = getSupabase();
+  if (!sb) return mockProducers.filter((p) => p.isFlagship);
+  const { data, error } = await sb
+    .from("producers")
+    .select("id, name, phone, description, is_flagship")
+    .eq("status", "approved")
+    .eq("is_flagship", true)
+    .order("name");
+  if (error) {
+    logError("getFlagshipProducers", error.message);
+    return [];
+  }
+  return (data as ProducerRow[]).map(producerFromRow);
 }
