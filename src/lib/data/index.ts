@@ -20,6 +20,7 @@ import type {
   Place,
   Producer,
   Product,
+  MediaItem,
   TimelineEntry,
   TimelineEra,
 } from "./types";
@@ -478,4 +479,43 @@ export async function getTimeline(eras: TimelineEra[]): Promise<TimelineEntry[]>
     return [];
   }
   return (data as TimelineRow[]).map(timelineFromRow);
+}
+
+// ---------- Media arxivi ----------
+
+interface MediaRow {
+  id: string;
+  title: string;
+  description: string | null;
+  taken_period: string | null;
+  storage_path: string;
+  uploader_name: string | null;
+}
+
+/** Storage yolundan tam public URL qurur. */
+export function mediaPublicUrl(storagePath: string): string {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  return `${base}/storage/v1/object/public/media/${storagePath}`;
+}
+
+export async function getMediaItems(): Promise<MediaItem[]> {
+  const sb = getSupabase();
+  if (!sb) return []; // mock rejimdə qalereya boş görünür (real şəkil yoxdur)
+  const { data, error } = await sb
+    .from("media_items")
+    .select("id, title, description, taken_period, storage_path, uploader_name")
+    .eq("status", "approved")
+    .order("created_at", { ascending: false });
+  if (error) {
+    logError("getMediaItems", error.message);
+    return [];
+  }
+  return (data as MediaRow[]).map((r) => ({
+    id: r.id,
+    title: r.title,
+    description: r.description ?? undefined,
+    takenPeriod: r.taken_period ?? undefined,
+    url: mediaPublicUrl(r.storage_path),
+    uploaderName: r.uploader_name ?? undefined,
+  }));
 }

@@ -18,11 +18,12 @@ export default function SectionsPage() {
         <Tile href="/haqqinda" icon="🏡" label="Kəndimiz" />
         <Tile href="/sehidler" icon="🕯️" label="Şəhidlərimiz" />
         <Tile href="/sos" icon="🆘" label="Təcili yardım" />
-        <Tile href="/bazar" icon="🛒" label="Bazar" soon />
-        <Tile href="/bazar" icon="🐄" label="Heyvan satışı" soon />
+        <Tile href="/bazar" icon="🛒" label="Bazar" />
+        <Tile href="/elanlar" icon="📢" label="Elanlar" />
+        <Tile href="/haqqinda/isgal-dovru" icon="📜" label="Tarix arxivi" />
+        <Tile href="/haqqinda/kohne-sekiller" icon="🖼️" label="Media arxivi" />
+        <Tile href="/paylasin" icon="📤" label="Siz də paylaşın" />
         <Tile href="/bazar" icon="🔧" label="Xidmətlər" soon />
-        <Tile href="/haqqinda/tarix" icon="📜" label="Tarix arxivi" soon />
-        <Tile href="/haqqinda/kohne-sekiller" icon="🖼️" label="Media arxivi" soon />
         <Tile href="/haqqinda" icon="👥" label="İcma" soon />
         <Tile href="/haqqinda" icon="🏘️" label="Turizm" soon />
         <Tile href="/haqqinda" icon="🚌" label="Nəqliyyat" soon />

@@ -109,6 +109,15 @@ export interface TimelineEntry {
   sources: string[];
 }
 
+export interface MediaItem {
+  id: string;
+  title: string;
+  description?: string;
+  takenPeriod?: string; // "1980-ci illər" kimi sərbəst mətn
+  url: string; // tam public URL
+  uploaderName?: string;
+}
+
 export interface Martyr {
   id: string;
   fullName: string;

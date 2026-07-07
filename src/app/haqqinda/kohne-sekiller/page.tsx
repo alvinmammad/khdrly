@@ -1,34 +1,73 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getMediaItems } from "@/lib/data";
 
-export const metadata: Metadata = { title: "Köhnə şəkillər" };
+export const metadata: Metadata = { title: "Media arxivi" };
 
-export default function OldPhotosPage() {
+export const revalidate = 300;
+
+export default async function MediaArchivePage() {
+  const items = await getMediaItems();
+
   return (
     <div className="space-y-5">
       <Link href="/haqqinda" className="inline-block font-bold text-kerpic">
         ← Kəndimiz
       </Link>
-      <h1 className="font-heading text-2xl font-bold">Köhnə şəkillər və xəritələr</h1>
-
-      <div className="rounded-2xl border border-line bg-surface p-8 text-center">
-        <p className="text-5xl" aria-hidden>🖼️</p>
-        <p className="mt-3 text-lg font-bold">Rəqəmsal arxiv hazırlanır</p>
+      <header>
+        <h1 className="font-heading text-2xl font-bold">🖼️ Media arxivi</h1>
         <p className="mt-2 text-ink-soft">
-          Kəndin köhnə fotoları, məktəb albomları, qədim xəritələr və sənədlər bu
-          bölmədə toplanacaq. Evinizdə köhnə şəkil və ya sənəd varsa, onu qoruyun —
-          tezliklə &quot;Siz də paylaşın&quot; funksiyası ilə arxivə əlavə edə biləcəksiniz.
+          Kəndin fotoyaddaşı — köhnə şəkillər, qayıdış anları, bu günün kəndi.
         </p>
-      </div>
+      </header>
 
-      <div className="rounded-2xl border-2 border-gunebaxan bg-gunebaxan/10 p-4">
-        <p className="font-bold">💡 Bilirsinizmi?</p>
+      <Link
+        href="/paylasin"
+        className="block rounded-2xl border-2 border-gunebaxan bg-gunebaxan/10 p-5 active:bg-gunebaxan/20"
+      >
+        <p className="text-lg font-bold">📤 Siz də paylaşın</p>
         <p className="mt-1 text-ink-soft">
-          Hər köhnə fotoşəkil kəndin yaddaşının bir parçasıdır. Planlaşdırılan
-          &quot;skan günü&quot; tədbirlərində gənclər yaşlı sakinlərin köhnə şəkillərini
-          telefonla skan edib arxivə yükləməyə kömək edəcək.
+          Köhnə fotolarınızı və xatirə şəkillərinizi kəndin arxivinə əlavə edin →
         </p>
-      </div>
+      </Link>
+
+      {items.length === 0 ? (
+        <div className="rounded-2xl border border-line bg-surface p-8 text-center">
+          <p className="text-5xl" aria-hidden>📷</p>
+          <p className="mt-3 text-xl font-bold">Arxiv hələ boşdur</p>
+          <p className="mt-2 text-ink-soft">
+            İlk şəkli siz paylaşa bilərsiniz — yoxlamadan sonra burada dərc
+            olunacaq. Evinizdə köhnə şəkil varsa, onu qoruyun: &quot;skan
+            günü&quot; tədbirlərində gənclər rəqəmsallaşdırmağa kömək edəcək.
+          </p>
+        </div>
+      ) : (
+        <ul className="grid grid-cols-2 gap-3">
+          {items.map((m) => (
+            <li key={m.id} className="overflow-hidden rounded-2xl border border-line bg-surface">
+              {/* Zəif internet: lazy yükləmə; şəkillər yükləmə zamanı brauzerdə sıxılıb */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={m.url}
+                alt={m.title}
+                loading="lazy"
+                className="aspect-square w-full object-cover"
+              />
+              <div className="p-3">
+                <p className="font-bold leading-snug">{m.title}</p>
+                {m.takenPeriod && (
+                  <p className="mt-0.5 text-sm text-ink-soft">{m.takenPeriod}</p>
+                )}
+                {m.uploaderName && (
+                  <p className="mt-0.5 text-sm text-ink-soft">
+                    Paylaşdı: {m.uploaderName}
+                  </p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
