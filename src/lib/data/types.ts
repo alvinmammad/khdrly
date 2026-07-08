@@ -164,6 +164,16 @@ export interface NotablePerson {
   sources: string[];
 }
 
+export interface Donation {
+  id: string;
+  donorDisplay: string;
+  amount?: number; // AZN
+  inKind?: string; // əşya/əmək ianəsi
+  purpose: string;
+  donatedAt: string; // ISO date
+  note?: string;
+}
+
 export interface MediaItem {
   id: string;
   title: string;

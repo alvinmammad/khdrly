@@ -26,6 +26,8 @@ export default function SectionsPage() {
         <Tile href="/xidmetler" icon="🔧" label="Xidmətlər" />
         <Tile href="/neqliyyat" icon="🚌" label="Nəqliyyat" />
         <Tile href="/turizm" icon="🏘️" label="Turizm" />
+        <Tile href="/ianeler" icon="🤝" label="İanələr" />
+        <Tile href="/haqqinda/meshurlar" icon="⭐" label="Məşhurlarımız" />
         <Tile href="/haqqinda" icon="👥" label="İcma" soon />
         <Tile href="/parametrler" icon="⚙️" label="Parametrlər" />
       </div>

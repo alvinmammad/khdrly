@@ -15,6 +15,7 @@ import {
   mockTransport,
 } from "./mock";
 import type {
+  Donation,
   DutyInfo,
   EventItem,
   Listing,
@@ -659,5 +660,40 @@ export async function getNotablePeople(): Promise<NotablePerson[]> {
     field: r.field,
     description: r.description,
     sources: r.sources ?? [],
+  }));
+}
+
+// ---------- İanə reyestri ----------
+
+interface DonationRow {
+  id: string;
+  donor_display: string;
+  amount: number | null;
+  in_kind: string | null;
+  purpose: string;
+  donated_at: string;
+  note: string | null;
+}
+
+export async function getDonations(): Promise<Donation[]> {
+  const sb = getSupabase();
+  if (!sb) return [];
+  const { data, error } = await sb
+    .from("donations")
+    .select("id, donor_display, amount, in_kind, purpose, donated_at, note")
+    .eq("status", "approved")
+    .order("donated_at", { ascending: false });
+  if (error) {
+    logError("getDonations", error.message);
+    return [];
+  }
+  return (data as DonationRow[]).map((r) => ({
+    id: r.id,
+    donorDisplay: r.donor_display,
+    amount: r.amount ?? undefined,
+    inKind: r.in_kind ?? undefined,
+    purpose: r.purpose,
+    donatedAt: r.donated_at,
+    note: r.note ?? undefined,
   }));
 }
