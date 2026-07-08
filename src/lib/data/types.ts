@@ -147,6 +147,23 @@ export interface Stay {
   priceNote?: string;
 }
 
+export type PersonField =
+  | "elm"
+  | "medeniyyet"
+  | "idman"
+  | "herbi"
+  | "emek"
+  | "diger";
+
+export interface NotablePerson {
+  id: string;
+  fullName: string;
+  yearsDisplay?: string;
+  field: PersonField;
+  description: string;
+  sources: string[];
+}
+
 export interface MediaItem {
   id: string;
   title: string;

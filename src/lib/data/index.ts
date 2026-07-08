@@ -24,6 +24,7 @@ import type {
   Producer,
   Product,
   MediaItem,
+  NotablePerson,
   ServiceProvider,
   Stay,
   TimelineEntry,
@@ -623,5 +624,40 @@ export async function getStays(): Promise<Stay[]> {
     description: r.description ?? undefined,
     phone: r.phone,
     priceNote: r.price_note ?? undefined,
+  }));
+}
+
+// ---------- Məşhurlarımız ----------
+// Mock QƏSDƏN yoxdur: real şəxs adları uydurulmur (şəhidlər prinsipi).
+
+interface PersonRow {
+  id: string;
+  full_name: string;
+  years_display: string | null;
+  field: NotablePerson["field"];
+  description: string;
+  sources: string[];
+}
+
+export async function getNotablePeople(): Promise<NotablePerson[]> {
+  const sb = getSupabase();
+  if (!sb) return [];
+  const { data, error } = await sb
+    .from("notable_people")
+    .select("id, full_name, years_display, field, description, sources")
+    .eq("status", "approved")
+    .order("field")
+    .order("full_name");
+  if (error) {
+    logError("getNotablePeople", error.message);
+    return [];
+  }
+  return (data as PersonRow[]).map((r) => ({
+    id: r.id,
+    fullName: r.full_name,
+    yearsDisplay: r.years_display ?? undefined,
+    field: r.field,
+    description: r.description,
+    sources: r.sources ?? [],
   }));
 }
