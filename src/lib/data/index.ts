@@ -723,3 +723,19 @@ export async function getDonations(): Promise<Donation[]> {
     note: r.note ?? undefined,
   }));
 }
+
+// ---------- Xatirə şamı ----------
+
+export async function getCandleCount(martyrId: string): Promise<number> {
+  const sb = getSupabase();
+  if (!sb) return 0;
+  const { count, error } = await sb
+    .from("memorial_candles")
+    .select("id", { count: "exact", head: true })
+    .eq("martyr_id", martyrId);
+  if (error) {
+    logError("getCandleCount", error.message);
+    return 0;
+  }
+  return count ?? 0;
+}

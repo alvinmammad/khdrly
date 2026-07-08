@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getMartyr } from "@/lib/data";
+import { getCandleCount, getMartyr } from "@/lib/data";
+import CandleSection from "./CandleSection";
 
 export const metadata: Metadata = { title: "Şəhidimiz" };
 
@@ -15,6 +16,7 @@ export default async function MartyrPage({
   const { id } = await params;
   const martyr = await getMartyr(id);
   if (!martyr || martyr.isSample) notFound();
+  const candleCount = await getCandleCount(id);
 
   return (
     <article className="mx-auto max-w-lg space-y-6">
@@ -47,6 +49,8 @@ export default async function MartyrPage({
           </ul>
         </section>
       )}
+
+      <CandleSection martyrId={martyr.id} initialCount={candleCount} />
 
       <p className="text-center text-ink-soft">Ruhu şad olsun.</p>
 
