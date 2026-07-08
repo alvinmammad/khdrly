@@ -10,6 +10,7 @@ import {
   mockProducers,
   mockProducts,
   mockServices,
+  mockStays,
   mockTimeline,
   mockTransport,
 } from "./mock";
@@ -24,6 +25,7 @@ import type {
   Product,
   MediaItem,
   ServiceProvider,
+  Stay,
   TimelineEntry,
   TimelineEra,
   TransportRoute,
@@ -587,5 +589,39 @@ export async function getTransportRoutes(): Promise<TransportRoute[]> {
     driverName: r.driver_name ?? undefined,
     phone: r.phone ?? undefined,
     note: r.note ?? undefined,
+  }));
+}
+
+// ---------- Turizm / kirayə ----------
+
+interface StayRow {
+  id: string;
+  name: string;
+  type: Stay["type"];
+  description: string | null;
+  phone: string;
+  price_note: string | null;
+}
+
+export async function getStays(): Promise<Stay[]> {
+  const sb = getSupabase();
+  if (!sb) return mockStays;
+  const { data, error } = await sb
+    .from("stays")
+    .select("id, name, type, description, phone, price_note")
+    .eq("status", "approved")
+    .order("type")
+    .order("name");
+  if (error) {
+    logError("getStays", error.message);
+    return [];
+  }
+  return (data as StayRow[]).map((r) => ({
+    id: r.id,
+    name: r.name,
+    type: r.type,
+    description: r.description ?? undefined,
+    phone: r.phone,
+    priceNote: r.price_note ?? undefined,
   }));
 }

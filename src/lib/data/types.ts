@@ -136,6 +136,17 @@ export interface TransportRoute {
   note?: string;
 }
 
+export type StayType = "qonaq_evi" | "kiraye_ev";
+
+export interface Stay {
+  id: string;
+  name: string;
+  type: StayType;
+  description?: string;
+  phone: string;
+  priceNote?: string;
+}
+
 export interface MediaItem {
   id: string;
   title: string;

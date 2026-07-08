@@ -22,7 +22,7 @@ export default async function AdminHomePage({
   const { xeta } = await searchParams;
   const [
     news, events, duty, places, martyrs, products, listings, timeline, media,
-    services, routes,
+    services, routes, stays,
   ] = await Promise.all([
     countRows("news"),
     countRows("events"),
@@ -35,6 +35,7 @@ export default async function AdminHomePage({
     countRows("media_items"),
     countRows("service_providers"),
     countRows("transport_routes"),
+    countRows("stays"),
   ]);
 
   const tiles = [
@@ -49,6 +50,7 @@ export default async function AdminHomePage({
     { href: "/admin/media", icon: "🖼️", label: "Media arxivi", count: media, ready: true },
     { href: "/admin/xidmetler", icon: "🔧", label: "Xidmətlər", count: services, ready: true },
     { href: "/admin/neqliyyat", icon: "🚌", label: "Nəqliyyat", count: routes, ready: true },
+    { href: "/admin/turizm", icon: "🏡", label: "Turizm / kirayə", count: stays, ready: true },
   ];
 
   return (

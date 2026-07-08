@@ -8,6 +8,7 @@ import type {
   Producer,
   Product,
   ServiceProvider,
+  Stay,
   TimelineEntry,
   TransportRoute,
 } from "./types";
@@ -248,5 +249,16 @@ export const mockTransport: TransportRoute[] = [
     driverName: "Nümunə sürücü",
     phone: "+994500000007",
     note: "Dəqiq cədvəl admin paneldən daxil ediləcək.",
+  },
+];
+
+export const mockStays: Stay[] = [
+  {
+    id: "q1",
+    name: "Nümunə qonaq evi",
+    type: "qonaq_evi",
+    description: "Kənd həyatını yaşamaq istəyən qonaqlar üçün. Nümunə kart.",
+    phone: "+994500000008",
+    priceNote: "Qiymət razılaşma ilə",
   },
 ];
