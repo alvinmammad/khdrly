@@ -232,6 +232,32 @@ export async function getPlaces(): Promise<Place[]> {
   }));
 }
 
+export async function getPlaceBySlug(slug: string): Promise<Place | undefined> {
+  const sb = getSupabase();
+  if (!sb) return mockPlaces.find((p) => p.slug === slug);
+  const { data, error } = await sb
+    .from("places")
+    .select("id, slug, name, type, lat, lng, body")
+    .eq("status", "approved")
+    .eq("slug", slug)
+    .maybeSingle();
+  if (error) {
+    logError("getPlaceBySlug", error.message);
+    return undefined;
+  }
+  if (!data) return undefined;
+  const r = data as PlaceRow;
+  return {
+    id: r.id,
+    slug: r.slug,
+    name: r.name,
+    type: r.type,
+    lat: r.lat,
+    lng: r.lng,
+    body: r.body ?? undefined,
+  };
+}
+
 // ---------- Şəhidlər (həssas bölmə) ----------
 
 interface MartyrRow {

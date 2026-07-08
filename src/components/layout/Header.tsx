@@ -6,7 +6,7 @@ import WeatherChip from "./WeatherChip";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-bg/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-line bg-bg/95 backdrop-blur print:hidden">
       <div className="mx-auto flex h-16 w-full max-w-3xl items-center justify-between gap-2 px-4">
         <Link href="/" className="flex min-w-0 items-center gap-2.5" aria-label="Ana səhifə">
           <Image src="/icon.svg" alt="" width={40} height={40} priority />

@@ -11,7 +11,7 @@ export default function SosFab() {
   return (
     <Link
       href="/sos"
-      className="fixed bottom-24 right-4 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-sos text-lg font-extrabold text-white shadow-lg shadow-black/25 active:scale-95"
+      className="fixed bottom-24 right-4 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-sos text-lg font-extrabold text-white shadow-lg shadow-black/25 active:scale-95 print:hidden"
       aria-label="SOS — təcili yardım nömrələri"
     >
       SOS
