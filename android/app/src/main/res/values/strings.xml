@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Xıdırlı</string>
+    <string name="title_activity_main">Xıdırlı</string>
+    <string name="package_name">az.xidirli.kend</string>
+    <string name="custom_url_scheme">az.xidirli.kend</string>
+</resources>
