@@ -83,11 +83,17 @@ export default async function ProductPage({
         <p className="mt-2 text-center text-sm text-ink-soft">
           {product.producer.phone}
         </p>
+        <Link
+          href={`/bazar/mehsul/${product.id}/sifaris`}
+          className="mt-3 flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-kerpic font-bold text-kerpic active:bg-kerpic/10"
+        >
+          🛒 Onlayn sifariş ver
+        </Link>
       </section>
 
       <p className="simple-hide text-sm text-ink-soft">
-        Sifariş və çatdırılma şərtlərini istehsalçı ilə telefonla razılaşdırın.
-        Onlayn sifariş imkanı hazırlanır.
+        Ən sürətli yol zəngdir. Onlayn sifariş verəndə sizinlə telefonla
+        əlaqə saxlanılıb dəqiqləşdirilir.
       </p>
     </div>
   );

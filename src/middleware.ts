@@ -35,5 +35,13 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   // Sessiya işlədən marşrutlar — ictimai statik səhifələrə toxunulmur
-  matcher: ["/admin/:path*", "/profil", "/giris", "/auth/:path*", "/forum/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/profil",
+    "/giris",
+    "/auth/:path*",
+    "/forum/:path*",
+    "/sifarislerim/:path*",
+    "/bazar/mehsul/:path*",
+  ],
 };

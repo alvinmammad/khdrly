@@ -92,6 +92,9 @@ export default async function ProfilePage({
         <Link href="/forum" className="block font-bold text-kerpic">
           💬 Forum — icma müzakirələri →
         </Link>
+        <Link href="/sifarislerim" className="block font-bold text-kerpic">
+          🛒 Sifarişlərim →
+        </Link>
         {user.isStaff && (
           <Link href="/admin" className="block font-bold text-kerpic">
             🛠️ İdarəetmə paneli →
