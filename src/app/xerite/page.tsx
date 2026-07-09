@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import type { Metadata } from "next";
 import VillageMap from "@/components/map/VillageMap";
 import { PLACE_META } from "@/lib/placeMeta";
@@ -12,6 +14,8 @@ export const revalidate = 300;
 export default async function MapPage() {
   const places = await getPlaces();
   const usedTypes = [...new Set(places.map((p) => p.type))] as PlaceType[];
+  // PMTiles faylı varsa vektor (oflayn işləyən) xəritə, yoxsa OSM raster
+  const hasPmtiles = existsSync(path.join(process.cwd(), "public", "xerite.pmtiles"));
 
   return (
     <div className="space-y-4">
@@ -20,7 +24,11 @@ export default async function MapPage() {
         İctimai yerlər ikonlarla işarələnib — ikona toxununca məlumat açılır.
       </p>
 
-      <VillageMap center={VILLAGE_CENTER} places={places} />
+      <VillageMap
+        center={VILLAGE_CENTER}
+        places={places}
+        pmtilesUrl={hasPmtiles ? "/xerite.pmtiles" : undefined}
+      />
 
       {/* Leqenda */}
       <div className="flex flex-wrap gap-2">
@@ -34,10 +42,11 @@ export default async function MapPage() {
         ))}
       </div>
 
-      <p className="text-sm text-ink-soft">
-        📍 Yerlərin koordinatları dəqiqləşdirilir. Mərhələ 2-də məhsul xəritəsi
-        (qaymaq istehsalçıları xüsusi ikonla) və turizm obyektləri əlavə olunacaq.
-      </p>
+      {hasPmtiles && (
+        <p className="text-sm text-ink-soft">
+          📶 Xəritə bir dəfə açılandan sonra internetsiz də işləyir.
+        </p>
+      )}
     </div>
   );
 }

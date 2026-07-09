@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
+import { Protocol } from "pmtiles";
+import protomapsLayers from "protomaps-themes-base";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { Place } from "@/lib/data/types";
 import { PLACE_META } from "@/lib/placeMeta";
@@ -9,23 +11,45 @@ import { PLACE_META } from "@/lib/placeMeta";
 interface Props {
   center: { lat: number; lng: number };
   places: Place[];
+  /** public/ daxilində PMTiles faylı varsa verilir — oflayn işləyən vektor xəritə */
+  pmtilesUrl?: string;
 }
 
 /*
-  Kənd xəritəsi. Hazırda OpenStreetMap raster mozaikaları ilə işləyir
-  (yüngül istifadə üçün pulsuz). İstehsalda kəndin əhatə dairəsi üçün
-  Protomaps PMTiles faylına keçiriləcək — bu, offline işləməyə imkan verir.
+  Kənd xəritəsi. pmtilesUrl veriləndə Protomaps vektor mozaikaları
+  işlədilir — fayl SW keşinə düşdükdən sonra xəritə OFLAYN da açılır
+  (zəif internet qaydası). Fayl yoxdursa OSM raster fallback qalır.
+  Fayl generasiyası: docs/XERITE.md
 */
-export default function VillageMap({ center, places }: Props) {
+export default function VillageMap({ center, places, pmtilesUrl }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    const map = new maplibregl.Map({
-      container: containerRef.current,
-      style: {
+    let protocol: Protocol | null = null;
+    let style: maplibregl.StyleSpecification;
+
+    if (pmtilesUrl) {
+      protocol = new Protocol();
+      maplibregl.addProtocol("pmtiles", protocol.tile);
+      style = {
+        version: 8,
+        glyphs:
+          "https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf",
+        sprite: "https://protomaps.github.io/basemaps-assets/sprites/v4/light",
+        sources: {
+          protomaps: {
+            type: "vector",
+            url: `pmtiles://${pmtilesUrl}`,
+            attribution: "© OpenStreetMap, Protomaps",
+          },
+        },
+        layers: protomapsLayers("protomaps", "light", "az"),
+      };
+    } else {
+      style = {
         version: 8,
         sources: {
           osm: {
@@ -36,7 +60,12 @@ export default function VillageMap({ center, places }: Props) {
           },
         },
         layers: [{ id: "osm", type: "raster", source: "osm" }],
-      },
+      };
+    }
+
+    const map = new maplibregl.Map({
+      container: containerRef.current,
+      style,
       center: [center.lng, center.lat],
       zoom: 14.5,
       attributionControl: { compact: true },
@@ -75,8 +104,9 @@ export default function VillageMap({ center, places }: Props) {
     return () => {
       map.remove();
       mapRef.current = null;
+      if (protocol) maplibregl.removeProtocol("pmtiles");
     };
-  }, [center, places]);
+  }, [center, places, pmtilesUrl]);
 
   return (
     <div

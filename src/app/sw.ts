@@ -1,6 +1,6 @@
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
 import { defaultCache } from "@serwist/next/worker";
-import { Serwist } from "serwist";
+import { CacheFirst, RangeRequestsPlugin, Serwist } from "serwist";
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -15,10 +15,39 @@ const serwist = new Serwist({
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
-  runtimeCaching: defaultCache,
+  runtimeCaching: [
+    // Oflayn xəritə: PMTiles range sorğuları keşdəki tam fayldan dilimlənir
+    {
+      matcher: ({ url }) => url.pathname === "/xerite.pmtiles",
+      handler: new CacheFirst({
+        cacheName: "xerite-pmtiles",
+        plugins: [new RangeRequestsPlugin()],
+      }),
+    },
+    // Xəritə şrift/spraytları (Protomaps assets)
+    {
+      matcher: ({ url }) => url.hostname === "protomaps.github.io",
+      handler: new CacheFirst({ cacheName: "xerite-assets" }),
+    },
+    ...defaultCache,
+  ],
 });
 
 serwist.addEventListeners();
+
+// Xəritə faylı quraşdırma zamanı bütöv keşə salınır — sonra oflayn işləyir.
+// Alınmasa SW yenə quraşdırılır (xəritə onlayn rejimdə işləyəcək).
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches
+      .open("xerite-pmtiles")
+      .then(async (cache) => {
+        const movcud = await cache.match("/xerite.pmtiles");
+        if (!movcud) await cache.add("/xerite.pmtiles");
+      })
+      .catch(() => {})
+  );
+});
 
 /* ---------- Web Push bildirişləri ---------- */
 
