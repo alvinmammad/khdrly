@@ -47,6 +47,16 @@ export default async function MapPage() {
           📶 Xəritə bir dəfə açılandan sonra internetsiz də işləyir.
         </p>
       )}
+
+      <a
+        href="/haqqinda/xatire-xeritesi"
+        className="block rounded-2xl border border-line bg-surface p-4 active:bg-surface-2"
+      >
+        <p className="font-bold">💭 Xatirə xəritəsi</p>
+        <p className="mt-1 text-sm text-ink-soft">
+          Köhnə kəndin yerləri — sakinlərin yaddaşından →
+        </p>
+      </a>
     </div>
   );
 }

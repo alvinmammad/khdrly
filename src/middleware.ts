@@ -44,5 +44,6 @@ export const config = {
     "/sifarislerim/:path*",
     "/bazar/mehsul/:path*",
     "/problemler/:path*",
+    "/haqqinda/xatire-xeritesi",
   ],
 };
