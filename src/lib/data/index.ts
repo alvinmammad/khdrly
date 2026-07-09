@@ -791,3 +791,41 @@ export async function getThenNow(): Promise<ThenNowItem[]> {
     afterUrl: mediaPublicUrl(r.after_path),
   }));
 }
+
+// ---------- Video xatirələr ----------
+
+interface VideoRow {
+  id: string;
+  title: string;
+  youtube_url: string;
+  description: string | null;
+}
+
+/** YouTube linkindən video ID çıxarır (watch, youtu.be, shorts, embed). */
+export function youtubeId(url: string): string | null {
+  const m = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/
+  );
+  return m ? m[1] : null;
+}
+
+export async function getVideos(): Promise<
+  { id: string; title: string; youtubeId: string; description?: string }[]
+> {
+  const sb = getSupabase();
+  if (!sb) return [];
+  const { data } = await sb
+    .from("video_items")
+    .select("id, title, youtube_url, description")
+    .eq("status", "approved")
+    .order("sort_order")
+    .order("created_at", { ascending: false });
+  return ((data ?? []) as VideoRow[])
+    .map((r) => ({
+      id: r.id,
+      title: r.title,
+      youtubeId: youtubeId(r.youtube_url) ?? "",
+      description: r.description ?? undefined,
+    }))
+    .filter((v) => v.youtubeId);
+}

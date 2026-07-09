@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import TtsButton from "@/components/ui/TtsButton";
+import Viktorina from "./Viktorina";
 
 export const metadata: Metadata = { title: "Uşaqlar üçün tariximiz" };
 
@@ -75,6 +76,8 @@ export default function KidsHistoryPage() {
           </section>
         ))}
       </div>
+
+      <Viktorina />
 
       <div className="grid gap-3 sm:grid-cols-2">
         <Link

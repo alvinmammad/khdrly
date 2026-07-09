@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getMediaItems, getThenNow } from "@/lib/data";
+import { getMediaItems, getThenNow, getVideos } from "@/lib/data";
 import ThenNowSlider from "@/components/ThenNowSlider";
 import SmartImage from "@/components/ui/SmartImage";
 
@@ -9,7 +9,11 @@ export const metadata: Metadata = { title: "Media arxivi" };
 export const revalidate = 300;
 
 export default async function MediaArchivePage() {
-  const [items, thenNow] = await Promise.all([getMediaItems(), getThenNow()]);
+  const [items, thenNow, videos] = await Promise.all([
+    getMediaItems(),
+    getThenNow(),
+    getVideos(),
+  ]);
 
   return (
     <div className="space-y-5">
@@ -32,6 +36,46 @@ export default async function MediaArchivePage() {
           Köhnə fotolarınızı və xatirə şəkillərinizi kəndin arxivinə əlavə edin →
         </p>
       </Link>
+
+      {videos.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="font-heading text-xl font-bold">📼 Video xatirələr</h2>
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {videos.map((v) => (
+              <li key={v.id}>
+                <a
+                  href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block overflow-hidden rounded-2xl border border-line bg-surface active:bg-surface-2"
+                >
+                  <div className="relative">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg`}
+                      alt={v.title}
+                      loading="lazy"
+                      className="aspect-video w-full object-cover"
+                    />
+                    <span
+                      aria-hidden
+                      className="absolute inset-0 flex items-center justify-center text-5xl drop-shadow"
+                    >
+                      ▶️
+                    </span>
+                  </div>
+                  <div className="p-3">
+                    <p className="font-bold leading-snug">{v.title}</p>
+                    {v.description && (
+                      <p className="mt-0.5 text-sm text-ink-soft">{v.description}</p>
+                    )}
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {thenNow.length > 0 && (
         <section className="space-y-3">

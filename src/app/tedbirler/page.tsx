@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getUpcomingEvents } from "@/lib/data";
 import { formatDateTime, formatWeekday } from "@/lib/format";
+import EventRsvp from "@/components/EventRsvp";
 
 export const metadata: Metadata = { title: "Tədbirlər" };
 
@@ -33,6 +34,7 @@ export default async function EventsPage() {
               {e.location ? ` · 📍 ${e.location}` : ""}
             </p>
             {e.body && <p className="mt-2 text-ink-soft">{e.body}</p>}
+            <EventRsvp eventId={e.id} />
           </li>
         ))}
       </ul>
