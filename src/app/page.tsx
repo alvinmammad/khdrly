@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import Tile from "@/components/ui/Tile";
 import DutyBanner from "@/components/home/DutyBanner";
+import OnThisDay from "@/components/home/OnThisDay";
+import PrayerTimes from "@/components/home/PrayerTimes";
 import { getNews, getUpcomingEvents } from "@/lib/data";
 import { formatDate, formatDateTime } from "@/lib/format";
 
@@ -36,8 +38,14 @@ export default async function HomePage() {
         <Tile href="/haqqinda" icon="🏡" label="Kəndimiz" hint="tarix və məlumat" />
         <Tile href="/sehidler" icon="🕯️" label="Şəhidlərimiz" />
         <Tile href="/tedbirler" icon="📅" label="Tədbirlər" />
-        <Tile href="/bazar" icon="🛒" label="Bazar" soon />
+        <Tile href="/bazar" icon="🛒" label="Bazar" hint="qaymaq · məhsullar" />
       </div>
+
+      <PrayerTimes />
+
+      <Suspense>
+        <OnThisDay />
+      </Suspense>
 
       {/* Kəndin brendi — Xıdırlı qaymağı */}
       <Link

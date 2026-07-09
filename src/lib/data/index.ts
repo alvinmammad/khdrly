@@ -739,3 +739,22 @@ export async function getCandleCount(martyrId: string): Promise<number> {
   }
   return count ?? 0;
 }
+
+/** "Bu gün tariximizdə" — bugünkü ay/günə düşən timeline hadisələri. */
+export async function getOnThisDay(): Promise<
+  (TimelineEntry & { yearsAgo: number })[]
+> {
+  const nowBaku = new Date(Date.now() + 4 * 60 * 60 * 1000);
+  const month = nowBaku.getUTCMonth() + 1;
+  const dayOfMonth = nowBaku.getUTCDate();
+  const year = nowBaku.getUTCFullYear();
+
+  const all = await getTimeline(["isgal", "azadliq", "berpa"]);
+  return all
+    .filter((e) => {
+      const d = new Date(e.eventDate + "T12:00:00Z");
+      return d.getUTCMonth() + 1 === month && d.getUTCDate() === dayOfMonth;
+    })
+    .map((e) => ({ ...e, yearsAgo: year - Number(e.eventDate.slice(0, 4)) }))
+    .filter((e) => e.yearsAgo > 0);
+}
