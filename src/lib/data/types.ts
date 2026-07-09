@@ -42,7 +42,9 @@ export type PlaceType =
   | "tarixi_ev"
   | "tesserrufat"
   | "turizm"
-  | "bayraq_meydani";
+  | "bayraq_meydani"
+  | "futbol_stadionu"
+  | "baghcha";
 
 export interface Place {
   id: string;
