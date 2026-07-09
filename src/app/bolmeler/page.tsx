@@ -30,7 +30,8 @@ export default function SectionsPage() {
         <Tile href="/haqqinda/meshurlar" icon="⭐" label="Məşhurlarımız" />
         <Tile href="/qonaq-kitabi" icon="📖" label="Qonaq kitabı" />
         <Tile href="/haqqinda/usaqlar-ucun" icon="🧒" label="Uşaqlar üçün" />
-        <Tile href="/haqqinda" icon="👥" label="İcma" soon />
+        <Tile href="/forum" icon="💬" label="Forum" />
+        <Tile href="/profil" icon="👤" label="Profilim" />
         <Tile href="/parametrler" icon="⚙️" label="Parametrlər" />
       </div>
 

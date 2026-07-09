@@ -34,6 +34,43 @@ export async function getSupabaseServer(): Promise<SupabaseClient | null> {
   });
 }
 
+export type SessionUser = {
+  id: string;
+  email: string | null;
+  fullName: string;
+  phone: string | null;
+  isStaff: boolean;
+};
+
+/** Daxil olmuş adi istifadəçi + profili (forum, sifariş və s. üçün). */
+export async function getSessionUser(): Promise<SessionUser | null> {
+  const sb = await getSupabaseServer();
+  if (!sb) return null;
+
+  const {
+    data: { user },
+  } = await sb.auth.getUser();
+  if (!user) return null;
+
+  const [{ data: profile }, { data: roles }] = await Promise.all([
+    sb.from("profiles").select("full_name, phone").eq("id", user.id).maybeSingle(),
+    sb.from("user_roles").select("role").eq("user_id", user.id),
+  ]);
+  const roleList = (roles ?? []).map((r) => r.role as string);
+
+  return {
+    id: user.id,
+    email: user.email ?? null,
+    fullName:
+      profile?.full_name ??
+      (user.user_metadata?.full_name as string | undefined) ??
+      user.email?.split("@")[0] ??
+      "Sakin",
+    phone: profile?.phone ?? null,
+    isStaff: roleList.includes("admin") || roleList.includes("moderator"),
+  };
+}
+
 export type StaffUser = {
   id: string;
   email: string | null;
