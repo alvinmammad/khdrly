@@ -92,6 +92,16 @@ export default function AboutPage() {
           </span>
         </Link>
         <Link
+          href="/haqqinda/sesli-tarix"
+          className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 shadow-sm active:bg-surface-2"
+        >
+          <span className="text-4xl" aria-hidden>🎙️</span>
+          <span>
+            <span className="block text-lg font-bold">Şifahi tarix</span>
+            <span className="text-ink-soft">Ağsaqqalların öz səsi ilə</span>
+          </span>
+        </Link>
+        <Link
           href="/haqqinda/secere"
           className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 shadow-sm active:bg-surface-2"
         >

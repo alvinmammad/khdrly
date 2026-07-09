@@ -24,6 +24,7 @@ const NAV = [
   { href: "/admin/tarix", label: "Tarix" },
   { href: "/admin/media", label: "Media" },
   { href: "/admin/onda-indi", label: "Onda-indi" },
+  { href: "/admin/sesli-tarix", label: "Şifahi tarix" },
   { href: "/admin/xidmetler", label: "Xidmətlər" },
   { href: "/admin/neqliyyat", label: "Nəqliyyat" },
   { href: "/admin/turizm", label: "Turizm" },
