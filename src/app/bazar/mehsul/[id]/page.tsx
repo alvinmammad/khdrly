@@ -2,7 +2,30 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProduct } from "@/lib/data";
+import { getSupabase } from "@/lib/supabase/client";
 import { CATEGORY_META, inSeason } from "@/lib/bazarMeta";
+import { formatDate } from "@/lib/format";
+
+type Review = {
+  id: string;
+  author_name: string;
+  rating: number;
+  body: string | null;
+  created_at: string;
+};
+
+async function getApprovedReviews(productId: string): Promise<Review[]> {
+  const sb = getSupabase();
+  if (!sb) return [];
+  const { data } = await sb
+    .from("product_reviews")
+    .select("id, author_name, rating, body, created_at")
+    .eq("product_id", productId)
+    .eq("status", "approved")
+    .order("created_at", { ascending: false })
+    .limit(20);
+  return (data ?? []) as Review[];
+}
 
 export const metadata: Metadata = { title: "Məhsul" };
 
@@ -21,6 +44,11 @@ export default async function ProductPage({
   const { id } = await params;
   const product = await getProduct(id);
   if (!product) notFound();
+  const reviews = await getApprovedReviews(id);
+  const avgRating =
+    reviews.length > 0
+      ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
+      : null;
 
   const month = new Date(Date.now() + 4 * 60 * 60 * 1000).getUTCMonth() + 1;
   const seasonal = product.seasonStart && product.seasonEnd;
@@ -95,6 +123,43 @@ export default async function ProductPage({
         Ən sürətli yol zəngdir. Onlayn sifariş verəndə sizinlə telefonla
         əlaqə saxlanılıb dəqiqləşdirilir.
       </p>
+
+      {/* Rəylər */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-heading text-xl font-bold">
+            ⭐ Rəylər
+            {avgRating !== null && (
+              <span className="ml-2 text-ink-soft">
+                {avgRating.toFixed(1)} / 5 ({reviews.length})
+              </span>
+            )}
+          </h2>
+          <Link
+            href={`/bazar/mehsul/${product.id}/rey`}
+            className="flex min-h-11 items-center rounded-xl border border-line bg-surface px-4 font-bold active:bg-surface-2"
+          >
+            Rəy yaz
+          </Link>
+        </div>
+        {reviews.length === 0 ? (
+          <p className="text-ink-soft">
+            Hələ rəy yoxdur — ilk rəyi siz yazın.
+          </p>
+        ) : (
+          <ul className="space-y-2">
+            {reviews.map((r) => (
+              <li key={r.id} className="rounded-2xl border border-line bg-surface p-4">
+                <p aria-label={`${r.rating} ulduz`}>{"⭐".repeat(r.rating)}</p>
+                {r.body && <p className="mt-1 leading-relaxed">{r.body}</p>}
+                <p className="mt-1 text-sm text-ink-soft">
+                  {r.author_name} · {formatDate(r.created_at)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }
