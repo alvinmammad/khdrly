@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { readPrefs } from "@/lib/prefs";
 
 /*
   Onda-və-indi müqayisə slideri — sürgünü çəkdikcə "indi" şəkli açılır.
@@ -18,6 +19,34 @@ export default function ThenNowSlider({
   afterUrl: string;
 }) {
   const [pos, setPos] = useState(50);
+  // Az-data rejimi: şəkillər yalnız istəklə yüklənir
+  const [show, setShow] = useState<"gozleyir" | "goster" | "soruş">("gozleyir");
+
+  useEffect(() => {
+    setShow(readPrefs().lowData ? "soruş" : "goster");
+  }, []);
+
+  if (show !== "goster") {
+    return (
+      <button
+        type="button"
+        disabled={show === "gozleyir"}
+        onClick={() => setShow("goster")}
+        className="flex aspect-[4/3] w-full items-center justify-center rounded-2xl border border-line bg-surface-2 text-ink-soft"
+      >
+        {show === "soruş" ? (
+          <span className="p-3 text-center font-bold">
+            ↔️ {title}
+            <span className="mt-1 block text-sm font-medium">
+              📷 Müqayisəni göstər
+            </span>
+          </span>
+        ) : (
+          <span aria-hidden>📷</span>
+        )}
+      </button>
+    );
+  }
 
   return (
     <figure className="overflow-hidden rounded-2xl border border-line bg-surface">

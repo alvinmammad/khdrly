@@ -58,6 +58,13 @@ export default async function PlacePage({
           Kəndin xəbərləri, bazarı və tarixi — hamısı bu tətbiqdədir.
         </p>
       </div>
+
+      <Link
+        href="/qonaq-kitabi"
+        className="block rounded-2xl border border-line bg-surface p-4 text-center font-bold active:bg-surface-2"
+      >
+        📖 Qonaq kitabına təəssürat yazın →
+      </Link>
     </div>
   );
 }

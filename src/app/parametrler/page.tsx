@@ -134,6 +134,33 @@ export default function SettingsPage() {
         </div>
       </section>
 
+      {/* Az-data rejimi */}
+      <section className="rounded-2xl border border-line bg-surface p-5">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-lg font-bold">📶 Az-data rejimi</p>
+            <p className="text-ink-soft">
+              Şəkillər yalnız siz istəyəndə yüklənsin — zəif internet üçün
+            </p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={prefs.lowData}
+            onClick={() => update({ lowData: !prefs.lowData })}
+            className={`h-9 w-16 shrink-0 rounded-full p-1 transition-colors ${
+              prefs.lowData ? "bg-kerpic" : "bg-surface-2 border border-line"
+            }`}
+          >
+            <span
+              className={`block h-7 w-7 rounded-full bg-white shadow transition-transform ${
+                prefs.lowData ? "translate-x-7" : ""
+              }`}
+            />
+          </button>
+        </div>
+      </section>
+
       <PushSettings />
 
       <p className="text-sm text-ink-soft">

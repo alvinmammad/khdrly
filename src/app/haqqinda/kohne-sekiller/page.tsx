@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getMediaItems, getThenNow } from "@/lib/data";
 import ThenNowSlider from "@/components/ThenNowSlider";
+import SmartImage from "@/components/ui/SmartImage";
 
 export const metadata: Metadata = { title: "Media arxivi" };
 
@@ -64,12 +65,9 @@ export default async function MediaArchivePage() {
         <ul className="grid grid-cols-2 gap-3">
           {items.map((m) => (
             <li key={m.id} className="overflow-hidden rounded-2xl border border-line bg-surface">
-              {/* Zəif internet: lazy yükləmə; şəkillər yükləmə zamanı brauzerdə sıxılıb */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <SmartImage
                 src={m.url}
                 alt={m.title}
-                loading="lazy"
                 className="aspect-square w-full object-cover"
               />
               <div className="p-3">

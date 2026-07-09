@@ -9,6 +9,7 @@ export interface Prefs {
   theme: "light" | "dark";
   contrast: "normal" | "high";
   simple: boolean;
+  lowData: boolean; // şəkillər yalnız istəklə yüklənsin (zəif internet)
 }
 
 const KEY = "xdr-prefs";
@@ -18,6 +19,7 @@ export const DEFAULT_PREFS: Prefs = {
   theme: "light",
   contrast: "normal",
   simple: false,
+  lowData: false,
 };
 
 export function readPrefs(): Prefs {

@@ -82,6 +82,16 @@ export default function AboutPage() {
           </span>
         </Link>
         <Link
+          href="/haqqinda/usaqlar-ucun"
+          className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 shadow-sm active:bg-surface-2"
+        >
+          <span className="text-4xl" aria-hidden>🧒</span>
+          <span>
+            <span className="block text-lg font-bold">Uşaqlar üçün tariximiz</span>
+            <span className="text-ink-soft">Kəndin hekayəsi — sadə dildə</span>
+          </span>
+        </Link>
+        <Link
           href="/haqqinda/meshurlar"
           className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 shadow-sm active:bg-surface-2"
         >
