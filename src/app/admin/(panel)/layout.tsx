@@ -28,6 +28,7 @@ const NAV = [
   { href: "/admin/neqliyyat", label: "Nəqliyyat" },
   { href: "/admin/turizm", label: "Turizm" },
   { href: "/admin/meshurlar", label: "Məşhurlar" },
+  { href: "/admin/nesiller", label: "Nəsillər" },
   { href: "/admin/ianeler", label: "İanələr" },
   { href: "/admin/qonaq-kitabi", label: "Qonaq kitabı" },
   { href: "/admin/qr", label: "QR" },

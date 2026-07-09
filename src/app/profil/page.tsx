@@ -80,6 +80,52 @@ export default async function ProfilePage({
             saytda heç vaxt açıq göstərilmir.
           </span>
         </label>
+        <fieldset className="rounded-2xl border border-line bg-surface p-4">
+          <legend className="px-1 font-medium">🌍 Harada yaşayırsınız?</legend>
+          <div className="space-y-2">
+            <label className="flex items-center gap-3 rounded-xl border border-line p-3 has-[:checked]:border-kerpic has-[:checked]:bg-kerpic/10">
+              <input
+                type="radio"
+                name="is_resident"
+                value="kend"
+                defaultChecked={user.isResident}
+                className="h-5 w-5"
+              />
+              <span className="font-medium">🏡 Kənddə / Azərbaycanda</span>
+            </label>
+            <label className="flex items-center gap-3 rounded-xl border border-line p-3 has-[:checked]:border-kerpic has-[:checked]:bg-kerpic/10">
+              <input
+                type="radio"
+                name="is_resident"
+                value="diaspora"
+                defaultChecked={!user.isResident}
+                className="h-5 w-5"
+              />
+              <span className="font-medium">✈️ Kənddən kənarda (diaspora)</span>
+            </label>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <input
+              type="text"
+              name="city"
+              placeholder="Şəhər (məs. Moskva)"
+              defaultValue={user.city ?? ""}
+              className="w-full rounded-xl border border-line bg-surface p-3"
+            />
+            <input
+              type="text"
+              name="country"
+              placeholder="Ölkə (məs. Rusiya)"
+              defaultValue={user.country ?? ""}
+              className="w-full rounded-xl border border-line bg-surface p-3"
+            />
+          </div>
+          <p className="mt-2 text-sm text-ink-soft">
+            Diaspora xəritəsində yalnız <strong>saylar</strong> görünür
+            (məs. "Moskva — 5 nəfər") — adınız göstərilmir.
+          </p>
+        </fieldset>
+
         <button
           type="submit"
           className="flex min-h-12 w-full items-center justify-center rounded-xl bg-kerpic font-bold text-white active:bg-kerpic-strong"

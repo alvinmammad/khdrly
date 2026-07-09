@@ -39,6 +39,9 @@ export type SessionUser = {
   email: string | null;
   fullName: string;
   phone: string | null;
+  isResident: boolean;
+  city: string | null;
+  country: string | null;
   isStaff: boolean;
 };
 
@@ -53,7 +56,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
   if (!user) return null;
 
   const [{ data: profile }, { data: roles }] = await Promise.all([
-    sb.from("profiles").select("full_name, phone").eq("id", user.id).maybeSingle(),
+    sb.from("profiles").select("full_name, phone, is_resident, city, country").eq("id", user.id).maybeSingle(),
     sb.from("user_roles").select("role").eq("user_id", user.id),
   ]);
   const roleList = (roles ?? []).map((r) => r.role as string);
@@ -67,6 +70,9 @@ export async function getSessionUser(): Promise<SessionUser | null> {
       user.email?.split("@")[0] ??
       "Sakin",
     phone: profile?.phone ?? null,
+    isResident: profile?.is_resident ?? true,
+    city: profile?.city ?? null,
+    country: profile?.country ?? null,
     isStaff: roleList.includes("admin") || roleList.includes("moderator"),
   };
 }
