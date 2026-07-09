@@ -12,4 +12,5 @@ export const PLACE_META: Record<PlaceType, { icon: string; label: string }> = {
   tarixi_ev: { icon: "🏚️", label: "Tarixi ev" },
   tesserrufat: { icon: "🐃", label: "Təsərrüfat" },
   turizm: { icon: "📸", label: "Turizm" },
+  bayraq_meydani: { icon: "🚩", label: "Bayraq meydanı" }
 };

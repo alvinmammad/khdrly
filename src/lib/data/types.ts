@@ -41,7 +41,8 @@ export type PlaceType =
   | "magaza"
   | "tarixi_ev"
   | "tesserrufat"
-  | "turizm";
+  | "turizm"
+  | "bayraq_meydani";
 
 export interface Place {
   id: string;
