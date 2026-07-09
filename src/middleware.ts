@@ -43,5 +43,6 @@ export const config = {
     "/forum/:path*",
     "/sifarislerim/:path*",
     "/bazar/mehsul/:path*",
+    "/problemler/:path*",
   ],
 };
