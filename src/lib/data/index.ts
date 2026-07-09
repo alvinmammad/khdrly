@@ -28,6 +28,7 @@ import type {
   NotablePerson,
   ServiceProvider,
   Stay,
+  ThenNowItem,
   TimelineEntry,
   TimelineEra,
   TransportRoute,
@@ -757,4 +758,36 @@ export async function getOnThisDay(): Promise<
     })
     .map((e) => ({ ...e, yearsAgo: year - Number(e.eventDate.slice(0, 4)) }))
     .filter((e) => e.yearsAgo > 0);
+}
+
+// ---------- Onda və indi ----------
+
+interface ThenNowRow {
+  id: string;
+  title: string;
+  note: string | null;
+  before_path: string;
+  after_path: string;
+}
+
+export async function getThenNow(): Promise<ThenNowItem[]> {
+  const sb = getSupabase();
+  if (!sb) return []; // real şəkil olmadan nümunə göstərilmir
+  const { data, error } = await sb
+    .from("then_now")
+    .select("id, title, note, before_path, after_path")
+    .eq("status", "approved")
+    .order("sort_order")
+    .order("created_at");
+  if (error) {
+    logError("getThenNow", error.message);
+    return [];
+  }
+  return (data as ThenNowRow[]).map((r) => ({
+    id: r.id,
+    title: r.title,
+    note: r.note ?? undefined,
+    beforeUrl: mediaPublicUrl(r.before_path),
+    afterUrl: mediaPublicUrl(r.after_path),
+  }));
 }

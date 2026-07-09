@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getMediaItems } from "@/lib/data";
+import { getMediaItems, getThenNow } from "@/lib/data";
+import ThenNowSlider from "@/components/ThenNowSlider";
 
 export const metadata: Metadata = { title: "Media arxivi" };
 
 export const revalidate = 300;
 
 export default async function MediaArchivePage() {
-  const items = await getMediaItems();
+  const [items, thenNow] = await Promise.all([getMediaItems(), getThenNow()]);
 
   return (
     <div className="space-y-5">
@@ -30,6 +31,24 @@ export default async function MediaArchivePage() {
           Köhnə fotolarınızı və xatirə şəkillərinizi kəndin arxivinə əlavə edin →
         </p>
       </Link>
+
+      {thenNow.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="font-heading text-xl font-bold">↔️ Onda və indi</h2>
+          <p className="text-sm text-ink-soft">
+            Sürgünü çəkin — dağıntıdan bərpaya gedən yolu görün.
+          </p>
+          {thenNow.map((t) => (
+            <ThenNowSlider
+              key={t.id}
+              title={t.title}
+              note={t.note}
+              beforeUrl={t.beforeUrl}
+              afterUrl={t.afterUrl}
+            />
+          ))}
+        </section>
+      )}
 
       {items.length === 0 ? (
         <div className="rounded-2xl border border-line bg-surface p-8 text-center">

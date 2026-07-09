@@ -177,6 +177,14 @@ export interface Donation {
   note?: string;
 }
 
+export interface ThenNowItem {
+  id: string;
+  title: string;
+  note?: string;
+  beforeUrl: string;
+  afterUrl: string;
+}
+
 export interface MediaItem {
   id: string;
   title: string;
