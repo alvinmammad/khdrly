@@ -34,6 +34,7 @@ const NAV = [
   { href: "/admin/ianeler", label: "İanələr" },
   { href: "/admin/qonaq-kitabi", label: "Qonaq kitabı" },
   { href: "/admin/qr", label: "QR" },
+  { href: "/bulleten", label: "Bülleten 🖨️" },
   { href: "/admin/bildirisler", label: "Bildirişlər" },
 ];
 
