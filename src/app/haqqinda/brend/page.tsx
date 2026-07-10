@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import TtsButton from "@/components/ui/TtsButton";
+import { ttsAudioSrc } from "@/lib/ttsAudio";
 
 export const metadata: Metadata = { title: "Xıdırlı qaymağı" };
 
 const STORY =
   "Xıdırlı kəndi Ağdam və bütün Qarabağ bazarlarında məhz camış qaymağı ilə tanınır. " +
   "Nəsildən-nəslə ötürülən ənənəvi üsulla hazırlanan Xıdırlı qaymağı kəndin süd və camış " +
-  "təsərrüfatının bəhrəsidir və sakinlərimizin fəxridir. Bazar modulu açılanda burada əsl " +
-  "Xıdırlı qaymağı istehsalçılarının siyahısını, sifariş imkanını və istehsal prosesini " +
-  "göstərən videoları tapa biləcəksiniz.";
+  "təsərrüfatının bəhrəsidir və sakinlərimizin fəxridir. Bazar bölməsində əsl Xıdırlı " +
+  "qaymağı istehsalçılarını tapıb birbaşa zəng edə bilərsiniz.";
 
 export default function BrandPage() {
   return (
@@ -26,7 +26,7 @@ export default function BrandPage() {
           <p className="mt-1 opacity-90">Kəndimizin brendi · Qarabağın dadı</p>
         </div>
         <div className="space-y-4 p-5">
-          <TtsButton text={STORY} />
+          <TtsButton text={STORY} audioSrc={ttsAudioSrc("brend")} />
           <p className="text-lg leading-relaxed">{STORY}</p>
         </div>
       </div>

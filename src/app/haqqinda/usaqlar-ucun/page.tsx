@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import TtsButton from "@/components/ui/TtsButton";
+import { ttsAudioSrc } from "@/lib/ttsAudio";
 import Viktorina from "./Viktorina";
 
 export const metadata: Metadata = { title: "Uşaqlar üçün tariximiz" };
@@ -61,7 +62,7 @@ export default function KidsHistoryPage() {
         </p>
       </header>
 
-      <TtsButton text={fullText} />
+      <TtsButton text={fullText} audioSrc={ttsAudioSrc("usaqlar-ucun")} />
 
       <div className="space-y-4">
         {SECTIONS.map((s) => (

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import TtsButton from "@/components/ui/TtsButton";
+import { ttsAudioSrc } from "@/lib/ttsAudio";
 
 export const metadata: Metadata = { title: "Kəndimiz" };
 
@@ -15,7 +16,7 @@ export default function AboutPage() {
     <div className="space-y-5">
       <h1 className="font-heading text-2xl font-bold">Kəndimiz — Xıdırlı</h1>
 
-      <TtsButton text={INTRO} />
+      <TtsButton text={INTRO} audioSrc={ttsAudioSrc("haqqinda")} />
 
       <p className="text-lg leading-relaxed">{INTRO}</p>
 
