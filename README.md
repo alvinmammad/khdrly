@@ -28,7 +28,7 @@ Hazırda tətbiq **nümunə (mock) data** ilə işləyir — Supabase açarları
 | Backend | Supabase (Postgres + Auth + Storage + Realtime), sxem: `supabase/migrations/` |
 | Xəritə | MapLibre GL (hazırda OSM raster, istehsalda Protomaps PMTiles — offline) |
 | Hava | Open-Meteo (pulsuz, açarsız) |
-| Səsli oxu | Web Speech API (cihaz), Mərhələ 2-də Azure TTS az-AZ audio keşi |
+| Səsli oxu | Öncədən yazılmış Gemini TTS mp3-ləri (scripts/tts.mjs), ehtiyat: cihazın Web Speech API-si |
 
 ## Struktur
 
@@ -54,5 +54,5 @@ supabase/           # SQL migrasiyaları (RLS siyasətləri ilə)
 - [ ] Supabase layihəsi yaradıb migrasiyanı tətbiq etmək, data qatını qoşmaq
 - [ ] Admin panel v1 (`/admin`): CMS + moderasiya növbəsi + bildiriş göndərmə
 - [ ] FCM push bildirişləri
-- [ ] Azure TTS ilə statik səhifələr üçün audio generasiyası
+- [ ] Gemini TTS ilə statik səhifələr üçün audio generasiyası (`node scripts/tts.mjs`)
 - [ ] Kəndin real POI koordinatlarının dəqiqləşdirilməsi, PMTiles çıxarışı

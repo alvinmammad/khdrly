@@ -1,24 +1,36 @@
 /*
-  Azure TTS ilə "Səsli dinlə" audio fayllarının generasiyası.
+  Gemini TTS ilə "Səsli dinlə" audio fayllarının generasiyası.
 
   İstifadə:
     node scripts/tts.mjs            # content/tts/*.txt → public/audio/*.mp3
 
   Tələblər (.env.local və ya mühit dəyişəni):
-    AZURE_SPEECH_KEY     — Azure Speech resursunun açarı (F0 pulsuz tier yetər)
-    AZURE_SPEECH_REGION  — resursun regionu (məs. westeurope)
+    GEMINI_API_KEY      — Google AI Studio açarı (aistudio.google.com → "Get API key")
 
-  Mətnləri content/tts/ qovluğunda saxlayın; fayl adı çıxış adını verir
-  (tarix.txt → /audio/tarix.mp3). Səhifə mətni dəyişəndə txt faylını da
-  yeniləyib skripti yenidən işlədin, mp3-ü commit edin.
+  İstəyə bağlı:
+    GEMINI_TTS_MODEL    — default: gemini-3.1-flash-tts-preview
+                          (açarınızın səviyyəsində işləməsə: gemini-2.5-flash-preview-tts)
+    GEMINI_TTS_VOICE    — default: Sulafat (isti ton). Digərləri: Kore, Aoede, Leda,
+                          Charon, Puck, Zephyr və s. (cəmi 30 səs, hamısı AZ oxuyur)
+
+  Model 24kHz 16-bit mono PCM qaytarır; skript onu 48 kbps mp3-ə çevirir
+  (zəif internet üçün kiçik fayl). Mətnləri content/tts/ qovluğunda saxlayın;
+  fayl adı çıxış adını verir (tarix.txt → /audio/tarix.mp3). Səhifə mətni
+  dəyişəndə txt faylını da yeniləyib skripti yenidən işlədin, mp3-ü commit edin.
 */
 
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import * as lame from "@breezystack/lamejs";
 
-const VOICE = "az-AZ-BanuNeural"; // qadın səsi; kişi səsi: az-AZ-BabekNeural
-const FORMAT = "audio-24khz-48kbitrate-mono-mp3";
-const CHUNK_LIMIT = 3000; // hər sorğuda maksimum simvol
+const Mp3Encoder = lame.Mp3Encoder ?? lame.default?.Mp3Encoder;
+
+const CHUNK_LIMIT = 3500; // hər sorğuda maksimum simvol (limit 32k tokendir, ehtiyatla)
+const SAMPLE_RATE = 24000;
+const MP3_KBPS = 48;
+// Oxunuş üslubu — sorğunun əvvəlinə qoyulur, səsləndirilmir (Gemini TTS bunu
+// təlimat kimi başa düşür)
+const STYLE = "Aşağıdakı mətni Azərbaycan dilində sakit, aydın və isti tonda oxu: ";
 
 function loadEnvLocal() {
   const env = {};
@@ -34,23 +46,18 @@ function loadEnvLocal() {
 }
 
 const envFile = loadEnvLocal();
-const KEY = process.env.AZURE_SPEECH_KEY || envFile.AZURE_SPEECH_KEY;
-const REGION =
-  process.env.AZURE_SPEECH_REGION || envFile.AZURE_SPEECH_REGION || "westeurope";
+const KEY = process.env.GEMINI_API_KEY || envFile.GEMINI_API_KEY;
+const MODEL =
+  process.env.GEMINI_TTS_MODEL ||
+  envFile.GEMINI_TTS_MODEL ||
+  "gemini-3.1-flash-tts-preview";
+const VOICE = process.env.GEMINI_TTS_VOICE || envFile.GEMINI_TTS_VOICE || "Sulafat";
 
 if (!KEY) {
   console.error(
-    "XƏTA: AZURE_SPEECH_KEY tapılmadı. .env.local faylına əlavə edin (bax: .env.example)."
+    "XƏTA: GEMINI_API_KEY tapılmadı. aistudio.google.com-dan açar alıb .env.local faylına əlavə edin (bax: .env.example)."
   );
   process.exit(1);
-}
-
-function escapeXml(s) {
-  return s
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
 }
 
 /** Mətni cümlə sərhədlərində CHUNK_LIMIT-ə sığan hissələrə bölür. */
@@ -70,28 +77,73 @@ function chunkText(text) {
   return chunks;
 }
 
-async function synthesize(text) {
-  const ssml = `<speak version="1.0" xml:lang="az-AZ"><voice name="${VOICE}"><prosody rate="-8%">${escapeXml(
-    text
-  )}</prosody></voice></speak>`;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-  const res = await fetch(
-    `https://${REGION}.tts.speech.microsoft.com/cognitiveservices/v1`,
-    {
-      method: "POST",
-      headers: {
-        "Ocp-Apim-Subscription-Key": KEY,
-        "Content-Type": "application/ssml+xml",
-        "X-Microsoft-OutputFormat": FORMAT,
-        "User-Agent": "xidirli-kend-tts",
-      },
-      body: ssml,
-    }
+/** Cavabdan base64 PCM-i çıxarır — API-nin bir neçə mümkün forması üçün. */
+function extractAudio(j) {
+  return (
+    j?.output_audio?.data ??
+    j?.outputAudio?.data ??
+    j?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data ??
+    j?.candidates?.[0]?.content?.parts?.[0]?.inline_data?.data
   );
-  if (!res.ok) {
-    throw new Error(`Azure TTS xətası: ${res.status} ${await res.text()}`);
+}
+
+async function synthesize(text) {
+  const body = {
+    model: MODEL,
+    input: `${STYLE}${text}`,
+    response_format: { type: "audio" },
+    generation_config: { speech_config: [{ voice: VOICE }] },
+  };
+
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const res = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/interactions",
+      {
+        method: "POST",
+        headers: {
+          "x-goog-api-key": KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    if (res.status === 429 || res.status === 503) {
+      // preview modellərin dəqiqəlik limiti dardır — gözləyib təkrar cəhd
+      console.log(`  ... limit (${res.status}), 20 saniyə gözlənilir (cəhd ${attempt}/3)`);
+      await sleep(20000);
+      continue;
+    }
+    if (!res.ok) {
+      throw new Error(`Gemini TTS xətası: ${res.status} ${await res.text()}`);
+    }
+    const j = await res.json();
+    const b64 = extractAudio(j);
+    if (!b64) {
+      throw new Error(
+        `Cavabda audio tapılmadı. Cavabın başlanğıcı: ${JSON.stringify(j).slice(0, 400)}`
+      );
+    }
+    return Buffer.from(b64, "base64"); // xam PCM (24kHz, 16-bit, mono)
   }
-  return Buffer.from(await res.arrayBuffer());
+  throw new Error("Gemini TTS: limit 3 cəhddən sonra da keçilmədi. Bir az sonra yenidən işlədin.");
+}
+
+/** 24kHz 16-bit mono PCM → 48 kbps mp3 */
+function pcmToMp3(pcm) {
+  const samples = new Int16Array(pcm.buffer, pcm.byteOffset, Math.floor(pcm.length / 2));
+  const encoder = new Mp3Encoder(1, SAMPLE_RATE, MP3_KBPS);
+  const parts = [];
+  const BLOCK = 1152;
+  for (let i = 0; i < samples.length; i += BLOCK) {
+    const out = encoder.encodeBuffer(samples.subarray(i, i + BLOCK));
+    if (out.length) parts.push(Buffer.from(out));
+  }
+  const end = encoder.flush();
+  if (end.length) parts.push(Buffer.from(end));
+  return Buffer.concat(parts);
 }
 
 const srcDir = path.join(process.cwd(), "content", "tts");
@@ -104,19 +156,22 @@ if (files.length === 0) {
   process.exit(0);
 }
 
+console.log(`Model: ${MODEL} · Səs: ${VOICE}`);
 for (const file of files) {
   const name = path.basename(file, ".txt");
   const text = readFileSync(path.join(srcDir, file), "utf8");
   const chunks = chunkText(text);
   console.log(`→ ${name}: ${text.length} simvol, ${chunks.length} hissə...`);
 
-  const buffers = [];
+  const pcmParts = [];
   for (const chunk of chunks) {
-    buffers.push(await synthesize(chunk));
+    pcmParts.push(await synthesize(chunk));
+    await sleep(3000); // preview limitlərinə hörmət
   }
+  const mp3 = pcmToMp3(Buffer.concat(pcmParts));
   const out = path.join(outDir, `${name}.mp3`);
-  writeFileSync(out, Buffer.concat(buffers));
-  console.log(`  ✓ ${out} (${Math.round(Buffer.concat(buffers).length / 1024)} KB)`);
+  writeFileSync(out, mp3);
+  console.log(`  ✓ ${out} (${Math.round(mp3.length / 1024)} KB)`);
 }
 
 console.log("Hazır. mp3 faylları commit etməyi unutmayın.");

@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react";
 
 /**
  * "Səsli dinlə" düyməsi — oxumaqda çətinlik çəkən sakinlər üçün.
- * audioSrc verilsə, Azure TTS ilə öncədən yazılmış audio çalınır
+ * audioSrc verilsə, Gemini TTS ilə öncədən yazılmış audio çalınır
  * (keyfiyyətli AZ səsi, SW keşi ilə oflayn da işləyir); verilməsə,
  * cihazın öz səsləndirməsi (Web Speech API) istifadə olunur.
- * Audio yaratmaq üçün: scripts/tts.mjs (AZURE_SPEECH_KEY tələb edir).
+ * Audio yaratmaq üçün: scripts/tts.mjs (GEMINI_API_KEY tələb edir).
  */
 export default function TtsButton({
   text,
