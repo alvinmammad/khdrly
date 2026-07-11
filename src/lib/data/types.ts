@@ -150,6 +150,21 @@ export interface Stay {
   priceNote?: string;
 }
 
+export type MarketCategory = "satilir" | "axtariram" | "icare" | "pulsuz";
+
+export interface MarketItem {
+  id: string;
+  category: MarketCategory;
+  title: string;
+  body: string;
+  price?: number; // AZN; yoxdursa "razılaşma ilə" / göstərilmir
+  photoUrl?: string;
+  phone: string;
+  authorName: string;
+  authorId: string;
+  createdAt: string; // ISO
+}
+
 export type PersonField =
   | "elm"
   | "medeniyyet"

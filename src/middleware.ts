@@ -45,5 +45,6 @@ export const config = {
     "/bazar/mehsul/:path*",
     "/problemler/:path*",
     "/haqqinda/xatire-xeritesi",
+    "/al-ver/:path*",
   ],
 };

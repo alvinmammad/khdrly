@@ -19,6 +19,8 @@ import type {
   DutyInfo,
   EventItem,
   Listing,
+  MarketCategory,
+  MarketItem,
   Martyr,
   NewsItem,
   Place,
@@ -885,4 +887,56 @@ export async function getRadioItems(): Promise<RadioItem[]> {
     })
     // youtube üçün pleyləst və ya video ID mütləq olmalı; stream həmişə keçir
     .filter((r) => r.kind === "stream" || r.playlistId || r.videoId);
+}
+
+// ---------- Al-ver (sakin elan lövhəsi) ----------
+
+interface MarketRow {
+  id: string;
+  category: MarketItem["category"];
+  title: string;
+  body: string;
+  price: number | null;
+  photo_path: string | null;
+  phone: string;
+  author_id: string;
+  author_name: string;
+  created_at: string;
+}
+
+function marketFromRow(r: MarketRow): MarketItem {
+  return {
+    id: r.id,
+    category: r.category,
+    title: r.title,
+    body: r.body,
+    price: r.price ?? undefined,
+    photoUrl: r.photo_path ? mediaPublicUrl(r.photo_path) : undefined,
+    phone: r.phone,
+    authorName: r.author_name,
+    authorId: r.author_id,
+    createdAt: r.created_at,
+  };
+}
+
+export async function getMarketItems(
+  category?: MarketCategory
+): Promise<MarketItem[]> {
+  const sb = getSupabase();
+  if (!sb) return [];
+  const now = new Date().toISOString();
+  let q = sb
+    .from("market_items")
+    .select("id, category, title, body, price, photo_path, phone, author_id, author_name, created_at")
+    .eq("status", "approved")
+    .or(`valid_to.is.null,valid_to.gte.${now}`)
+    .order("created_at", { ascending: false })
+    .limit(200);
+  if (category) q = q.eq("category", category);
+  const { data, error } = await q;
+  if (error) {
+    logError("getMarketItems", error.message);
+    return [];
+  }
+  return (data as MarketRow[]).map(marketFromRow);
 }

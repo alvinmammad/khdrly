@@ -141,6 +141,9 @@ export default async function ProfilePage({
         <Link href="/sifarislerim" className="block font-bold text-kerpic">
           🛒 Sifarişlərim →
         </Link>
+        <Link href="/al-ver/menimkiler" className="block font-bold text-kerpic">
+          🏷️ Elanlarım (Al-ver) →
+        </Link>
         {user.isStaff && (
           <Link href="/admin" className="block font-bold text-kerpic">
             🛠️ İdarəetmə paneli →

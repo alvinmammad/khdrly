@@ -39,6 +39,7 @@ export default async function HomePage() {
         <Tile href="/sehidler" icon="🕯️" label="Şəhidlərimiz" />
         <Tile href="/tedbirler" icon="📅" label="Tədbirlər" />
         <Tile href="/bazar" icon="🛒" label="Bazar" hint="qaymaq · məhsullar" />
+        <Tile href="/al-ver" icon="🏷️" label="Al-ver" hint="sakin elanları" />
       </div>
 
       <PrayerTimes />
