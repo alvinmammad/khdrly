@@ -829,3 +829,60 @@ export async function getVideos(): Promise<
     }))
     .filter((v) => v.youtubeId);
 }
+
+// ---------- Kənd radiosu ----------
+
+interface RadioRow {
+  id: string;
+  kind: "youtube" | "stream";
+  title: string;
+  url: string;
+  description: string | null;
+}
+
+export type RadioItem = {
+  id: string;
+  kind: "youtube" | "stream";
+  title: string;
+  url: string;
+  description?: string;
+  playlistId?: string; // youtube pleyləst ID (varsa)
+  videoId?: string; // youtube tək video ID (pleyləst yoxdursa)
+};
+
+/** YouTube linkindən pleyləst ID çıxarır (list= parametri). */
+export function youtubePlaylistId(url: string): string | null {
+  const m = url.match(/[?&]list=([\w-]+)/);
+  return m ? m[1] : null;
+}
+
+export async function getRadioItems(): Promise<RadioItem[]> {
+  const sb = getSupabase();
+  if (!sb) return [];
+  const { data, error } = await sb
+    .from("radio_items")
+    .select("id, kind, title, url, description")
+    .eq("status", "approved")
+    .order("sort_order")
+    .order("created_at");
+  if (error) {
+    logError("getRadioItems", error.message);
+    return [];
+  }
+  return (data as RadioRow[])
+    .map((r) => {
+      const playlistId = r.kind === "youtube" ? youtubePlaylistId(r.url) : null;
+      const videoId = r.kind === "youtube" ? youtubeId(r.url) : null;
+      return {
+        id: r.id,
+        kind: r.kind,
+        title: r.title,
+        url: r.url,
+        description: r.description ?? undefined,
+        playlistId: playlistId ?? undefined,
+        videoId: videoId ?? undefined,
+      };
+    })
+    // youtube üçün pleyləst və ya video ID mütləq olmalı; stream həmişə keçir
+    .filter((r) => r.kind === "stream" || r.playlistId || r.videoId);
+}

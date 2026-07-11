@@ -24,6 +24,7 @@ const NAV = [
   { href: "/admin/xatire-xeritesi", label: "Xatirə xəritəsi" },
   { href: "/admin/sorgular", label: "Sorğular" },
   { href: "/admin/videolar", label: "Videolar" },
+  { href: "/admin/radio", label: "Radio" },
   { href: "/admin/elanlar", label: "Elanlar" },
   { href: "/admin/tarix", label: "Tarix" },
   { href: "/admin/media", label: "Media" },
