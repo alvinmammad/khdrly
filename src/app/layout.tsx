@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import BottomNav from "@/components/layout/BottomNav";
 import SosFab from "@/components/layout/SosFab";
+import GlobalRadio from "@/components/layout/GlobalRadio";
 import { PREFS_BOOT_SCRIPT } from "@/lib/prefs";
 
 const lora = Lora({
@@ -50,6 +51,7 @@ export default function RootLayout({
         <Header />
         <main className="mx-auto w-full max-w-3xl px-4 pb-36 pt-4">{children}</main>
         <SosFab />
+        <GlobalRadio />
         <BottomNav />
       </body>
     </html>
