@@ -2,11 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
-import { Protocol } from "pmtiles";
-import protomapsLayers from "protomaps-themes-base";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { Place } from "@/lib/data/types";
 import { PLACE_META } from "@/lib/placeMeta";
+import {
+  ensurePmtilesProtocol,
+  osmRasterStyle,
+  pmtilesVectorStyle,
+} from "@/lib/mapStyle";
 
 interface Props {
   center: { lat: number; lng: number };
@@ -36,48 +39,28 @@ export default function VillageMap({ center, places, pmtilesUrl }: Props) {
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    let protocol: Protocol | null = null;
-    let style: maplibregl.StyleSpecification;
-
-    if (pmtilesUrl) {
-      protocol = new Protocol();
-      maplibregl.addProtocol("pmtiles", protocol.tile);
-      style = {
-        version: 8,
-        glyphs:
-          "https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf",
-        sprite: "https://protomaps.github.io/basemaps-assets/sprites/v4/light",
-        sources: {
-          protomaps: {
-            type: "vector",
-            url: `pmtiles://${pmtilesUrl}`,
-            attribution: "© OpenStreetMap, Protomaps",
-          },
-        },
-        layers: protomapsLayers("protomaps", "light", "az"),
-      };
-    } else {
-      style = {
-        version: 8,
-        sources: {
-          osm: {
-            type: "raster",
-            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-            tileSize: 256,
-            attribution: "© OpenStreetMap contributors",
-          },
-        },
-        layers: [{ id: "osm", type: "raster", source: "osm" }],
-      };
-    }
+    const useVector = Boolean(pmtilesUrl);
+    if (useVector) ensurePmtilesProtocol();
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style,
+      style: useVector ? pmtilesVectorStyle(pmtilesUrl!) : osmRasterStyle(),
       center: [center.lng, center.lat],
       zoom: 14.5,
       attributionControl: { compact: true },
     });
+
+    // Vektor (PMTiles) yüklənməsə — avtomatik OSM raster-ə keç ki, xəritə
+    // heç vaxt boz qalmasın (etibarlılıq zəif internet/uyğunsuzluqda).
+    if (useVector) {
+      let switched = false;
+      map.on("error", (e) => {
+        if (switched) return;
+        switched = true;
+        console.warn("Xəritə vektor rejimi alınmadı, OSM-ə keçilir:", e?.error);
+        map.setStyle(osmRasterStyle());
+      });
+    }
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
     map.addControl(
@@ -112,7 +95,7 @@ export default function VillageMap({ center, places, pmtilesUrl }: Props) {
     return () => {
       map.remove();
       mapRef.current = null;
-      if (protocol) maplibregl.removeProtocol("pmtiles");
+      // Protokol qlobal qalır (module-level, bir dəfə) — silmirik.
     };
   }, [center, places, pmtilesUrl]);
 

@@ -2,9 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
-import { Protocol } from "pmtiles";
-import protomapsLayers from "protomaps-themes-base";
 import "maplibre-gl/dist/maplibre-gl.css";
+import {
+  ensurePmtilesProtocol,
+  osmRasterStyle,
+  pmtilesVectorStyle,
+} from "@/lib/mapStyle";
 import { createMemoryPin } from "./actions";
 
 export type MemoryPin = {
@@ -50,49 +53,28 @@ export default function MemoryMap({ center, pins, pmtilesUrl, canAdd }: Props) {
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    let protocol: Protocol | null = null;
-    let style: maplibregl.StyleSpecification;
-
-    if (pmtilesUrl) {
-      protocol = new Protocol();
-      maplibregl.addProtocol("pmtiles", protocol.tile);
-      style = {
-        version: 8,
-        glyphs:
-          "https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf",
-        sprite: "https://protomaps.github.io/basemaps-assets/sprites/v4/light",
-        sources: {
-          protomaps: {
-            type: "vector",
-            url: `pmtiles://${pmtilesUrl}`,
-            attribution: "© OpenStreetMap, Protomaps",
-          },
-        },
-        layers: protomapsLayers("protomaps", "light", "az"),
-      };
-    } else {
-      style = {
-        version: 8,
-        sources: {
-          osm: {
-            type: "raster",
-            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-            tileSize: 256,
-            attribution: "© OpenStreetMap contributors",
-          },
-        },
-        layers: [{ id: "osm", type: "raster", source: "osm" }],
-      };
-    }
+    const useVector = Boolean(pmtilesUrl);
+    if (useVector) ensurePmtilesProtocol();
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style,
+      style: useVector ? pmtilesVectorStyle(pmtilesUrl!) : osmRasterStyle(),
       center: [center.lng, center.lat],
       zoom: 14.5,
       attributionControl: { compact: true },
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+
+    // Vektor yüklənməsə OSM raster-ə keç (xəritə boz qalmasın)
+    if (useVector) {
+      let switched = false;
+      map.on("error", (e) => {
+        if (switched) return;
+        switched = true;
+        console.warn("Xatirə xəritəsi vektor rejimi alınmadı, OSM-ə keçilir:", e?.error);
+        map.setStyle(osmRasterStyle());
+      });
+    }
 
     for (const p of pins) {
       const el = document.createElement("div");
@@ -138,7 +120,7 @@ export default function MemoryMap({ center, pins, pmtilesUrl, canAdd }: Props) {
       map.remove();
       mapRef.current = null;
       draftMarkerRef.current = null;
-      if (protocol) maplibregl.removeProtocol("pmtiles");
+      // Protokol qlobal qalır (module-level, bir dəfə) — silmirik.
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [center, pins, pmtilesUrl]);

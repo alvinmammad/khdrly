@@ -13,7 +13,7 @@ Fayl silinsə, komponent avtomatik köhnə OSM raster rejiminə qayıdır.
 # Ən son gündəlik build: https://build.protomaps.com/YYYYMMDD.pmtiles
 
 pmtiles extract https://build.protomaps.com/20260709.pmtiles \
-  public/xerite.pmtiles --bbox=46.75,39.92,47.05,40.12
+  public/xerite.pmtiles --bbox=46.83,39.97,46.96,40.07
 ```
 
 Sonra commit + deploy. Qeyd: bbox böyüdülsə fayl da böyüyür —
