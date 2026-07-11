@@ -81,6 +81,15 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /** Cavabdan base64 PCM-i çıxarır — API-nin bir neçə mümkün forması üçün. */
 function extractAudio(j) {
+  // Yeni "interactions" formatı: steps[].content[] içində audio elementi
+  // (gemini-3.1-flash-tts-preview → mime_type "audio/l16", 24kHz mono PCM)
+  for (const step of j?.steps ?? []) {
+    for (const c of step?.content ?? []) {
+      if (c?.data && (c.type === "audio" || String(c.mime_type ?? "").startsWith("audio")))
+        return c.data;
+    }
+  }
+  // Köhnə/alternativ formalar
   return (
     j?.output_audio?.data ??
     j?.outputAudio?.data ??
