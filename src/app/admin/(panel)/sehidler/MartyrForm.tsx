@@ -20,7 +20,6 @@ type Props = {
     militaryUnit: string | null;
     awards: string[] | null;
     sources: string[];
-    photoUrl: string | null;
     anniversaryNotify: boolean;
   };
 };
@@ -86,30 +85,19 @@ export default function MartyrForm({ xeta, defaults }: Props) {
         </span>
       </label>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className="block">
-          <span className="mb-1 block font-medium">Hərbi hissə (istəyə bağlı)</span>
-          <input
-            type="text"
-            name="military_unit"
-            defaultValue={defaults?.militaryUnit ?? ""}
-            className="w-full rounded-xl border border-line bg-surface p-3"
-          />
-          <span className="mt-1 block text-sm text-ink-soft">
-            Yalnız açıq/ictimai mənbədə dərc olunubsa.
-          </span>
-        </label>
-        <label className="block">
-          <span className="mb-1 block font-medium">Foto URL (istəyə bağlı)</span>
-          <input
-            type="url"
-            name="photo_url"
-            placeholder="https://…"
-            defaultValue={defaults?.photoUrl ?? ""}
-            className="w-full rounded-xl border border-line bg-surface p-3"
-          />
-        </label>
-      </div>
+      <label className="block">
+        <span className="mb-1 block font-medium">Hərbi hissə (istəyə bağlı)</span>
+        <input
+          type="text"
+          name="military_unit"
+          defaultValue={defaults?.militaryUnit ?? ""}
+          className="w-full rounded-xl border border-line bg-surface p-3"
+        />
+        <span className="mt-1 block text-sm text-ink-soft">
+          Yalnız açıq/ictimai mənbədə dərc olunubsa. Şəkil düzəliş
+          səhifəsindəki &quot;Portret&quot; bölməsindən yüklənir.
+        </span>
+      </label>
 
       <label className="block">
         <span className="mb-1 block font-medium">Təltiflər (hər sətirdə bir)</span>

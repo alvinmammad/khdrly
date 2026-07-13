@@ -44,7 +44,6 @@ export async function saveMartyr(formData: FormData) {
   const militaryUnit = String(formData.get("military_unit") ?? "").trim();
   const awards = toLines(String(formData.get("awards") ?? ""));
   const sources = toLines(String(formData.get("sources") ?? ""));
-  const photoUrl = String(formData.get("photo_url") ?? "").trim();
   const anniversaryNotify = formData.get("anniversary_notify") === "on";
 
   const formPath = id ? `/admin/sehidler/${id}` : "/admin/sehidler/yeni";
@@ -58,7 +57,8 @@ export async function saveMartyr(formData: FormData) {
     military_unit: militaryUnit || null,
     awards: awards.length ? awards : null,
     sources,
-    photo_url: photoUrl || null,
+    // photo_url burada YAZILMIR — portret ayrıca vidjetlə idarə olunur
+    // (setMartyrPhoto/removeMartyrPhoto), yoxsa forma köhnə dəyərlə əzərdi
     anniversary_notify: anniversaryNotify,
   };
 
@@ -174,4 +174,74 @@ export async function deleteMartyr(formData: FormData) {
 
   revalidateMartyrs(id);
   redirect("/admin/sehidler");
+}
+
+/*
+  Portret idarəsi. Şəkil client tərəfdən (staff sessiyası ilə) media
+  bucket-inin sehidler/ qovluğuna yüklənir — 0013-dəki "media staff
+  upload" siyasəti bunu əhatə edir. Burada yalnız photo_url yazılır;
+  köhnə şəkil bizim storage-dədirsə, təmizlənir.
+*/
+
+const PHOTO_PATH_RE = /^sehidler\/[\w.-]+$/;
+
+function storagePathFromUrl(url: string | null): string | null {
+  if (!url) return null;
+  const m = url.match(/\/storage\/v1\/object\/public\/media\/(sehidler\/[\w.-]+)$/);
+  return m ? m[1] : null;
+}
+
+export async function setMartyrPhoto(meta: {
+  martyrId: string;
+  path: string;
+}): Promise<boolean> {
+  const { sb } = await requireAdmin();
+
+  if (!PHOTO_PATH_RE.test(meta.path)) return false;
+
+  const { data: existing } = await sb
+    .from("martyrs")
+    .select("photo_url")
+    .eq("id", meta.martyrId)
+    .maybeSingle();
+  if (!existing) return false;
+
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  const url = `${base}/storage/v1/object/public/media/${meta.path}`;
+
+  const { error } = await sb
+    .from("martyrs")
+    .update({ photo_url: url })
+    .eq("id", meta.martyrId);
+  if (error) return false;
+
+  // Köhnə portret bizim storage-dədirsə, yer tutmasın deyə silinir
+  const oldPath = storagePathFromUrl(existing.photo_url);
+  if (oldPath && oldPath !== meta.path) {
+    await sb.storage.from("media").remove([oldPath]);
+  }
+
+  revalidateMartyrs(meta.martyrId);
+  return true;
+}
+
+export async function removeMartyrPhoto(formData: FormData) {
+  const { sb } = await requireAdmin();
+
+  const id = String(formData.get("id") ?? "").trim();
+  if (!id) redirect("/admin/sehidler");
+
+  const { data: existing } = await sb
+    .from("martyrs")
+    .select("photo_url")
+    .eq("id", id)
+    .maybeSingle();
+
+  const oldPath = storagePathFromUrl(existing?.photo_url ?? null);
+  if (oldPath) await sb.storage.from("media").remove([oldPath]);
+
+  await sb.from("martyrs").update({ photo_url: null }).eq("id", id);
+
+  revalidateMartyrs(id);
+  redirect(`/admin/sehidler/${id}`);
 }

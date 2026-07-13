@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getStaffUser, getSupabaseServer } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
 import MartyrForm, { MARTYR_XETALAR } from "../MartyrForm";
+import PhotoUpload from "./PhotoUpload";
 import {
   approveAsAdmin,
   approveFamily,
@@ -166,6 +167,8 @@ export default async function EditMartyrPage({
         </div>
       </section>
 
+      <PhotoUpload martyrId={data.id} currentUrl={data.photo_url} />
+
       <MartyrForm
         defaults={{
           id: data.id,
@@ -176,7 +179,6 @@ export default async function EditMartyrPage({
           militaryUnit: data.military_unit,
           awards: data.awards,
           sources: data.sources ?? [],
-          photoUrl: data.photo_url,
           anniversaryNotify: data.anniversary_notify,
         }}
       />

@@ -216,5 +216,6 @@ export interface Martyr {
   deathDate?: string;
   bio: string;
   awards?: string[];
+  photoUrl?: string; // ailənin razılığı ilə yüklənmiş portret
   isSample: boolean; // nümunə məlumat — real profillər yalnız ikiqat təsdiqdən sonra
 }

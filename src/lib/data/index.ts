@@ -270,6 +270,7 @@ interface MartyrRow {
   death_date: string | null;
   bio: string | null;
   awards: string[] | null;
+  photo_url: string | null;
 }
 
 function martyrFromRow(r: MartyrRow): Martyr {
@@ -281,6 +282,7 @@ function martyrFromRow(r: MartyrRow): Martyr {
     deathDate: r.death_date?.slice(0, 4),
     bio: r.bio ?? "",
     awards: r.awards ?? undefined,
+    photoUrl: r.photo_url ?? undefined,
     isSample: false,
   };
 }
@@ -291,7 +293,7 @@ export async function getMartyrs(): Promise<Martyr[]> {
   // RLS onsuz da yalnız approved qaytarır; filtr burada da açıq yazılır
   const { data, error } = await sb
     .from("martyrs")
-    .select("id, full_name, birth_date, death_date, bio, awards")
+    .select("id, full_name, birth_date, death_date, bio, awards, photo_url")
     .eq("status", "approved")
     .order("death_date", { ascending: true });
   if (error) {
@@ -306,7 +308,7 @@ export async function getMartyr(id: string): Promise<Martyr | undefined> {
   if (!sb) return mockMartyrs.find((m) => m.id === id);
   const { data, error } = await sb
     .from("martyrs")
-    .select("id, full_name, birth_date, death_date, bio, awards")
+    .select("id, full_name, birth_date, death_date, bio, awards, photo_url")
     .eq("status", "approved")
     .eq("id", id)
     .maybeSingle();

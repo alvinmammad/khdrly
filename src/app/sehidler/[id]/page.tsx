@@ -21,7 +21,16 @@ export default async function MartyrPage({
   return (
     <article className="mx-auto max-w-lg space-y-6">
       <header className="text-center">
-        <p className="text-4xl" aria-hidden>🕯️</p>
+        {martyr.photoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={martyr.photoUrl}
+            alt={martyr.fullName}
+            className="mx-auto h-44 w-36 rounded-2xl border-2 border-kerpic/40 object-cover shadow-sm"
+          />
+        ) : (
+          <p className="text-4xl" aria-hidden>🕯️</p>
+        )}
         <h1 className="mt-3 font-heading text-3xl font-bold">{martyr.fullName}</h1>
         {martyr.birthYear && martyr.deathDate && (
           <p className="mt-2 text-xl text-ink-soft">

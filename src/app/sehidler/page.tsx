@@ -45,9 +45,19 @@ export default async function MartyrsPage() {
                 href={`/sehidler/${m.id}`}
                 className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5"
               >
-                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-surface-2 text-2xl" aria-hidden>
-                  🎗️
-                </span>
+                {m.photoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={m.photoUrl}
+                    alt={m.fullName}
+                    loading="lazy"
+                    className="h-14 w-14 shrink-0 rounded-full border border-line object-cover"
+                  />
+                ) : (
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-surface-2 text-2xl" aria-hidden>
+                    🎗️
+                  </span>
+                )}
                 <span>
                   <span className="block text-lg font-bold">{m.fullName}</span>
                   {m.birthYear && m.deathDate && (
