@@ -47,6 +47,7 @@ export default async function BulletinPage() {
     day: "numeric",
     month: "long",
     year: "numeric",
+    timeZone: "Asia/Baku", // server UTC-dədir
   }).format(new Date());
 
   return (

@@ -20,6 +20,7 @@ export default async function HomePage() {
     weekday: "long",
     day: "numeric",
     month: "long",
+    timeZone: "Asia/Baku", // server UTC-dədir — onsuz gecə saatlarında dünənki tarix çıxır
   }).format(new Date());
 
   return (

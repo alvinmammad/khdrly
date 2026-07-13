@@ -15,6 +15,14 @@ interface Props {
   pmtilesUrl?: string;
 }
 
+function escapeHtml(s: string): string {
+  return s
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
 /*
   Kənd xəritəsi. pmtilesUrl veriləndə Protomaps vektor mozaikaları
   işlədilir — fayl SW keşinə düşdükdən sonra xəritə OFLAYN da açılır
@@ -89,8 +97,8 @@ export default function VillageMap({ center, places, pmtilesUrl }: Props) {
 
       const popup = new maplibregl.Popup({ offset: 18, closeButton: false }).setHTML(
         `<div style="font-family:inherit">
-           <strong style="font-size:15px">${meta.icon} ${p.name}</strong>
-           ${p.body ? `<p style="margin:6px 0 0;font-size:13px">${p.body}</p>` : ""}
+           <strong style="font-size:15px">${meta.icon} ${escapeHtml(p.name)}</strong>
+           ${p.body ? `<p style="margin:6px 0 0;font-size:13px">${escapeHtml(p.body)}</p>` : ""}
          </div>`
       );
 
