@@ -1,10 +1,15 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { getFlagshipProducers, getProducts } from "@/lib/data";
 import { CATEGORY_META } from "@/lib/bazarMeta";
 import type { ProductCategory } from "@/lib/data/types";
 
-export const metadata: Metadata = { title: "Bazar" };
+export const metadata = pageMetadata({
+  title: "Xıdırlı bazarı — qaymaq və təzə kənd məhsulları",
+  description:
+    "Xıdırlı kənd bazarı: məşhur Xıdırlı qaymağı, süd məhsulları və mövsümi meyvə-tərəvəz — istehsalçıdan birbaşa, zəng edib sifariş verin.",
+  path: "/bazar",
+});
 
 export const revalidate = 300;
 

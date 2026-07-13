@@ -1,9 +1,14 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import TtsButton from "@/components/ui/TtsButton";
 import { ttsAudioSrc } from "@/lib/ttsAudio";
 
-export const metadata: Metadata = { title: "Kəndimiz" };
+export const metadata = pageMetadata({
+  title: "Xıdırlı kəndi haqqında — tarix, coğrafiya, məlumat",
+  description:
+    "Xıdırlı kəndi Ağdam rayonunda, Ağdam şəhərindən 3 km şimal-qərbdə yerləşir. Kəndin tarixi, koordinatları, əhalisi və məşhur Xıdırlı qaymağı haqqında məlumat.",
+  path: "/haqqinda",
+});
 
 const INTRO =
   "Xıdırlı — Azərbaycanın Ağdam rayonunda, Ağdam şəhərindən təxminən 3 kilometr şimal-qərbdə yerləşən kənddir. " +

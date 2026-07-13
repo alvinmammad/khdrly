@@ -1,9 +1,14 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import TtsButton from "@/components/ui/TtsButton";
 import { ttsAudioSrc } from "@/lib/ttsAudio";
 
-export const metadata: Metadata = { title: "Xıdırlı qaymağı" };
+export const metadata = pageMetadata({
+  title: "Xıdırlı qaymağı — kəndimizin brendi",
+  description:
+    "Əsl Xıdırlı qaymağı: Ağdam və Qarabağ bazarlarında məşhur camış qaymağının hekayəsi, ənənəvi hazırlanma üsulu və istehsalçılardan birbaşa sifariş imkanı.",
+  path: "/haqqinda/brend",
+});
 
 const STORY =
   "Xıdırlı kəndi Ağdam və bütün Qarabağ bazarlarında məhz camış qaymağı ilə tanınır. " +

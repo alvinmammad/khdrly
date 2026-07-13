@@ -1,9 +1,14 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import TtsButton from "@/components/ui/TtsButton";
 import { ttsAudioSrc } from "@/lib/ttsAudio";
 
-export const metadata: Metadata = { title: "Kəndin tarixi" };
+export const metadata = pageMetadata({
+  title: "Xıdırlı kəndinin tarixi — işğal, azadlıq və bərpa",
+  description:
+    "Xıdırlı tarixi: adın mənşəyi, 1993-cü il işğalı, 27 illik həsrət, 2020-ci il azadlığı və Böyük Qayıdış proqramı ilə kəndin yenidən qurulması.",
+  path: "/haqqinda/tarix",
+});
 
 /*
   Qeyd: Buradakı mətn ümumi, rəsmi mənbələrlə üst-üstə düşən faktlardır.

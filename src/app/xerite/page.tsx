@@ -1,13 +1,18 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import VillageMap from "@/components/map/VillageMap";
 import { PLACE_META } from "@/lib/placeMeta";
 import { getPlaces } from "@/lib/data";
 import { VILLAGE_CENTER } from "@/lib/data/mock";
 import type { PlaceType } from "@/lib/data/types";
 
-export const metadata: Metadata = { title: "Xəritə" };
+export const metadata = pageMetadata({
+  title: "Xıdırlı kəndinin xəritəsi — məktəb, məscid, ictimai yerlər",
+  description:
+    "Xıdırlı kəndinin interaktiv xəritəsi: məktəb, məscid, sağlamlıq məntəqəsi, bulaq, mağaza və digər ictimai yerlər ikonlarla — koordinatlarla birlikdə.",
+  path: "/xerite",
+});
 
 export const revalidate = 300;
 

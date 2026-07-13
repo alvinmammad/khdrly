@@ -4,8 +4,12 @@ import Tile from "@/components/ui/Tile";
 import DutyBanner from "@/components/home/DutyBanner";
 import OnThisDay from "@/components/home/OnThisDay";
 import PrayerTimes from "@/components/home/PrayerTimes";
+import JsonLd from "@/components/seo/JsonLd";
 import { getNews, getUpcomingEvents } from "@/lib/data";
 import { formatDate, formatDateTime } from "@/lib/format";
+import { VILLAGE_JSONLD, WEBSITE_JSONLD } from "@/lib/seo";
+
+export const metadata = { alternates: { canonical: "/" } };
 
 // Supabase-dəki yeniliklər build olmadan görünsün (ISR)
 export const revalidate = 300;
@@ -20,10 +24,15 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-6">
-      <p className="text-ink-soft">
-        <span className="font-heading text-xl font-bold text-ink">Xoş gəlmisiniz!</span>{" "}
-        · {today}
-      </p>
+      <JsonLd data={WEBSITE_JSONLD} />
+      <JsonLd data={VILLAGE_JSONLD} />
+
+      <div className="flex flex-wrap items-baseline gap-x-2">
+        <h1 className="font-heading text-xl font-bold">
+          Xıdırlı kəndinə xoş gəlmisiniz!
+        </h1>
+        <span className="text-ink-soft">· {today}</span>
+      </div>
 
       <Suspense>
         <DutyBanner />

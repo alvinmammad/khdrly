@@ -5,7 +5,9 @@ import Header from "@/components/layout/Header";
 import BottomNav from "@/components/layout/BottomNav";
 import SosFab from "@/components/layout/SosFab";
 import GlobalRadio from "@/components/layout/GlobalRadio";
+import Footer from "@/components/layout/Footer";
 import { PREFS_BOOT_SCRIPT } from "@/lib/prefs";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 const lora = Lora({
   subsets: ["latin", "latin-ext"],
@@ -20,14 +22,56 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Xıdırlı — kəndimizin rəqəmsal evi",
-    template: "%s | Xıdırlı",
+    default: "Xıdırlı kəndi — Ağdam rayonu | Rəsmi sayt",
+    template: "%s | Xıdırlı kəndi",
   },
-  description:
-    "Ağdam rayonu Xıdırlı kəndinin rəsmi tətbiqi: hava, xəbərlər, növbətçi məlumatlar, kəndin tarixi, xəritə və bazar.",
+  description: SITE_DESCRIPTION,
+  keywords: [
+    "Xıdırlı",
+    "Xıdırlı kəndi",
+    "Xıdırlı Ağdam",
+    "Xıdırlı tarixi",
+    "Xıdırlı şəhidləri",
+    "Xıdırlı xəbərləri",
+    "Xıdırlı qaymağı",
+    "Ağdam rayonu kəndləri",
+    "Qarabağ",
+    "Böyük Qayıdış",
+  ],
+  applicationName: SITE_NAME,
   manifest: "/manifest.webmanifest",
   icons: { icon: "/icon.svg" },
+  // Qeyd: canonical hər səhifədə ayrıca verilir (pageMetadata helper-i ilə) —
+  // layout-da verilsə bütün alt səhifələrə miras keçib hamısını "/" göstərərdi
+  openGraph: {
+    type: "website",
+    locale: "az_AZ",
+    url: "/",
+    siteName: SITE_NAME,
+    title: "Xıdırlı kəndi — Ağdam rayonu",
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Xıdırlı kəndi — Ağdam rayonu",
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  // Google Search Console təsdiqi — dəyəri .env-ə yazın (bax: .env.example)
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
 };
 
 export const viewport: Viewport = {
@@ -49,7 +93,10 @@ export default function RootLayout({
         className={`${lora.variable} ${inter.variable} bg-bg font-body text-ink antialiased`}
       >
         <Header />
-        <main className="mx-auto w-full max-w-3xl px-4 pb-36 pt-4">{children}</main>
+        <main className="mx-auto w-full max-w-3xl px-4 pb-8 pt-4">{children}</main>
+        <div className="pb-28">
+          <Footer />
+        </div>
         <SosFab />
         <GlobalRadio />
         <BottomNav />

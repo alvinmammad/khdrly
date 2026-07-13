@@ -40,6 +40,9 @@ User prefs (font scale 0–3, theme, contrast, simple view) live in `localStorag
 ### Server/client component split
 Shared constants used by both server pages and `"use client"` components must live in `src/lib/` (see `src/lib/placeMeta.ts`). Importing a non-component export from a client module into a server component yields a client-reference proxy, which fails only at prerender time — this already bit `/xerite` once.
 
+### SEO
+Target queries are "Xıdırlı", "Xıdırlı kəndi/Ağdam/tarixi/şəhidləri/xəbərləri" etc. Helpers live in `src/lib/seo.ts`: `SITE_URL` (from `NEXT_PUBLIC_SITE_URL`, fallback xidirli.vercel.app), `pageMetadata()` (title + description + canonical + OG — use it for every new public page), `VILLAGE_JSONLD`/`WEBSITE_JSONLD`. JSON-LD goes through `src/components/seo/JsonLd.tsx` (NewsArticle on news, Place on `/yer/[slug]`, Product on product pages, WebSite+Place on home). `src/app/sitemap.ts` lists static routes explicitly plus dynamic news/places/products/martyrs — **add new public routes there**; `robots.ts` disallows private/admin routes. **Never put `alternates.canonical` in a layout** — it cascades to all child pages. The OG image is generated at build (`src/app/opengraph-image.tsx`); root layout holds metadataBase/OG/twitter/verification (`GOOGLE_SITE_VERIFICATION` env). Footer (`src/components/layout/Footer.tsx`) provides sitewide internal links; it's `simple-hide` + `print:hidden`.
+
 ### PWA
 `@serwist/next` builds `src/app/sw.ts` → `public/sw.js` (gitignored, prod-only). Offline caching of essentials (SOS numbers, village info, duty data) is a core requirement for this weak-internet region, not an optional enhancement.
 

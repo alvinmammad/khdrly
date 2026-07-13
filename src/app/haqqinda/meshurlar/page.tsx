@@ -1,10 +1,15 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { getNotablePeople } from "@/lib/data";
 import { PERSON_META } from "@/lib/personMeta";
 import type { PersonField } from "@/lib/data/types";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Məşhurlarımız" };
+export const metadata = pageMetadata({
+  title: "Xıdırlıdan çıxmış məşhurlar — müəllimlər, alimlər, idmançılar",
+  description:
+    "Xıdırlı kəndindən çıxmış tanınmış şəxslər: müəllimlər, həkimlər, alimlər, idmançılar və sənət adamları — kəndimizin fəxrləri.",
+  path: "/haqqinda/meshurlar",
+});
 
 export const revalidate = 300;
 

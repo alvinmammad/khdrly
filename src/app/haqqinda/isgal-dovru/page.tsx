@@ -1,9 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { getTimeline } from "@/lib/data";
 import { formatDate } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "İşğal dövrü (1993–2020)" };
+export const metadata = pageMetadata({
+  title: "Xıdırlı işğal dövründə (1993–2020) — tarixi arxiv",
+  description:
+    "Xıdırlı kəndinin işğal dövrü (1993–2020): xronologiya, mənbəli tarixi faktlar, arxiv materialları və sakinlərin xatirələri.",
+  path: "/haqqinda/isgal-dovru",
+});
 
 export const revalidate = 300;
 

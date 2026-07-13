@@ -1,8 +1,13 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { getMartyrs } from "@/lib/data";
 
-export const metadata: Metadata = { title: "Şəhidlərimiz" };
+export const metadata = pageMetadata({
+  title: "Xıdırlı şəhidləri — əziz xatirələrinə",
+  description:
+    "Xıdırlı kəndinin şəhidləri — Vətənin azadlığı uğrunda canını fəda etmiş həmkəndlilərimizin xatirə səhifəsi. Allah rəhmət eləsin.",
+  path: "/sehidler",
+});
 
 export const revalidate = 300;
 

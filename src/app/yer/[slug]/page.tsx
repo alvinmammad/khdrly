@@ -1,10 +1,29 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPlaceBySlug } from "@/lib/data";
 import { PLACE_META } from "@/lib/placeMeta";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, SITE_URL } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Yer" };
+// "Xıdırlı məktəbi", "Xıdırlı məscidi" kimi axtarışların düşdüyü səhifələr —
+// hər yerin öz title/description-ı və schema.org Place strukturu var
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const place = await getPlaceBySlug(slug);
+  if (!place) return { title: "Yer" };
+  const meta = PLACE_META[place.type];
+  return pageMetadata({
+    title: `${place.name} — Xıdırlı kəndi, Ağdam`,
+    description:
+      place.body ??
+      `${place.name} (${meta.label.toLowerCase()}) Xıdırlı kəndində, Ağdam rayonunda yerləşir. Yerin tarixçəsi, xəritədə mövqeyi və kənd haqqında məlumat.`,
+    path: `/yer/${place.slug}`,
+  });
+}
 
 export const revalidate = 300;
 
@@ -25,6 +44,31 @@ export default async function PlacePage({
 
   return (
     <div className="space-y-5">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Place",
+          name: place.name,
+          url: `${SITE_URL}/yer/${place.slug}`,
+          ...(place.body ? { description: place.body } : {}),
+          ...(place.lat && place.lng
+            ? {
+                geo: {
+                  "@type": "GeoCoordinates",
+                  latitude: place.lat,
+                  longitude: place.lng,
+                },
+              }
+            : {}),
+          containedInPlace: { "@id": `${SITE_URL}#village` },
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Xıdırlı",
+            addressRegion: "Ağdam rayonu",
+            addressCountry: "AZ",
+          },
+        }}
+      />
       <header className="text-center">
         <p className="text-6xl" aria-hidden>{meta.icon}</p>
         <h1 className="mt-2 font-heading text-3xl font-bold">{place.name}</h1>

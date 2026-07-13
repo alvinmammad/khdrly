@@ -1,9 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { getTimeline } from "@/lib/data";
 import { formatDate } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Azadlıq və Bərpa" };
+export const metadata = pageMetadata({
+  title: "Xıdırlının azadlığı və bərpası — Böyük Qayıdış",
+  description:
+    "20 noyabr 2020-də Ağdamın azadlığı və Xıdırlı kəndinin Böyük Qayıdış proqramı ilə yenidən qurulması — bərpanın zaman xətti və ilk ailələrin qayıdışı.",
+  path: "/haqqinda/azadliq",
+});
 
 export const revalidate = 300;
 

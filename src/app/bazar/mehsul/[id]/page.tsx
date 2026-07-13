@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProduct } from "@/lib/data";
 import { getSupabase } from "@/lib/supabase/client";
 import { CATEGORY_META, inSeason } from "@/lib/bazarMeta";
 import { formatDate } from "@/lib/format";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata } from "@/lib/seo";
 
 type Review = {
   id: string;
@@ -27,7 +28,26 @@ async function getApprovedReviews(productId: string): Promise<Review[]> {
   return (data ?? []) as Review[];
 }
 
-export const metadata: Metadata = { title: "Məhsul" };
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const product = await getProduct(id);
+  if (!product) return { title: "Məhsul" };
+  return pageMetadata({
+    title: `${product.name} — Xıdırlı bazarı`,
+    description:
+      product.description ??
+      `${product.name} — Xıdırlı kəndinin təsərrüfatından, istehsalçıdan birbaşa. ${
+        product.price !== undefined
+          ? `Qiymət: ${product.price} AZN${product.unit ? ` / ${product.unit}` : ""}.`
+          : "Qiymət razılaşma ilə."
+      }`,
+    path: `/bazar/mehsul/${product.id}`,
+  });
+}
 
 export const revalidate = 300;
 
@@ -56,6 +76,35 @@ export default async function ProductPage({
 
   return (
     <div className="space-y-5">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.name,
+          ...(product.description ? { description: product.description } : {}),
+          brand: { "@type": "Brand", name: "Xıdırlı" },
+          ...(product.price !== undefined
+            ? {
+                offers: {
+                  "@type": "Offer",
+                  price: product.price,
+                  priceCurrency: "AZN",
+                  availability: "https://schema.org/InStock",
+                  seller: { "@type": "Person", name: product.producer.name },
+                },
+              }
+            : {}),
+          ...(avgRating !== null
+            ? {
+                aggregateRating: {
+                  "@type": "AggregateRating",
+                  ratingValue: Number(avgRating.toFixed(1)),
+                  reviewCount: reviews.length,
+                },
+              }
+            : {}),
+        }}
+      />
       <Link href="/bazar" className="inline-block font-bold text-kerpic">
         ← Bazar
       </Link>

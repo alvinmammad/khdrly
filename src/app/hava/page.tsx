@@ -1,8 +1,13 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { describeWeather, farmerAdvice, getWeather } from "@/lib/weather";
 import { formatShortDate, formatWeekday } from "@/lib/format";
 
-export const metadata: Metadata = { title: "Hava" };
+export const metadata = pageMetadata({
+  title: "Xıdırlı hava proqnozu — bugün və 7 günlük",
+  description:
+    "Xıdırlı kəndində (Ağdam) hava: cari temperatur, külək, rütubət və 7 günlük dəqiq proqnoz. Fermerlər üçün əkin-suvarma tövsiyələri ilə.",
+  path: "/hava",
+});
 
 export default async function WeatherPage() {
   const w = await getWeather();

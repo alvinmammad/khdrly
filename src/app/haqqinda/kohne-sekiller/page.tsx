@@ -1,10 +1,15 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { getMediaItems, getThenNow, getVideos } from "@/lib/data";
 import ThenNowSlider from "@/components/ThenNowSlider";
 import SmartImage from "@/components/ui/SmartImage";
 
-export const metadata: Metadata = { title: "Media arxivi" };
+export const metadata = pageMetadata({
+  title: "Xıdırlı media arxivi — köhnə şəkillər və videolar",
+  description:
+    "Xıdırlı kəndinin foto-video yaddaşı: köhnə şəkillər, qayıdış anları, onda-və-indi müqayisələri və video xatirələr.",
+  path: "/haqqinda/kohne-sekiller",
+});
 
 export const revalidate = 300;
 

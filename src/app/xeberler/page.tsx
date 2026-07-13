@@ -1,9 +1,14 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { getNews } from "@/lib/data";
 import { formatDate } from "@/lib/format";
 
-export const metadata: Metadata = { title: "Xəbərlər" };
+export const metadata = pageMetadata({
+  title: "Xıdırlı xəbərləri — kənddən son yeniliklər",
+  description:
+    "Xıdırlı kəndinin son xəbərləri: kənd həyatı, tədbirlər, elanlar, bərpa işləri və icma yenilikləri — birbaşa kənddən.",
+  path: "/xeberler",
+});
 
 export const revalidate = 300;
 
