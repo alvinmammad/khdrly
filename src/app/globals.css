@@ -12,7 +12,9 @@
   --ink: #33261d;
   --ink-soft: #6b5849;
   --line: #e3d6bf;
-  --kerpic: #b5542d;
+  /* #b5542d idi — krem fonda mətn kontrastı 4.3:1 (AA-dan aşağı) qalırdı;
+     #a94e28 həm mətndə (4.8:1), həm düymələrin ağ yazısında (5.5:1) AA keçir */
+  --kerpic: #a94e28;
   --kerpic-strong: #93411f;
   --nar: #8e2a3a;
   --gunebaxan: #e8a93c;

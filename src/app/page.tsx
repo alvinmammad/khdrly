@@ -85,7 +85,11 @@ export default async function HomePage() {
         <section className="simple-hide">
           <div className="mb-2 flex items-baseline justify-between">
             <h2 className="font-heading text-xl font-bold">Qarşıdan gələnlər</h2>
-            <Link href="/tedbirler" className="font-bold text-kerpic">
+            <Link
+              href="/tedbirler"
+              aria-label="Bütün tədbirlərə bax"
+              className="font-bold text-kerpic"
+            >
               Hamısı →
             </Link>
           </div>
@@ -108,7 +112,11 @@ export default async function HomePage() {
         <section className="simple-hide">
           <div className="mb-2 flex items-baseline justify-between">
             <h2 className="font-heading text-xl font-bold">Son xəbərlər</h2>
-            <Link href="/xeberler" className="font-bold text-kerpic">
+            <Link
+              href="/xeberler"
+              aria-label="Bütün xəbərlərə bax"
+              className="font-bold text-kerpic"
+            >
               Hamısı →
             </Link>
           </div>

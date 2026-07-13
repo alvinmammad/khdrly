@@ -54,6 +54,7 @@ export default function Footer() {
                   <li key={href}>
                     <Link
                       href={href}
+                      prefetch={false}
                       className="text-sm text-ink-soft underline-offset-2 hover:underline"
                     >
                       {label}

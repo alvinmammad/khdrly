@@ -13,6 +13,7 @@ export default function Tile({ href, icon, label, hint, soon }: TileProps) {
   return (
     <Link
       href={href}
+      prefetch={false} // zəif internet: plitələr çox olduğundan qabaqcadan yükləmə data israf edir
       className="relative flex min-h-32 flex-col items-center justify-center gap-2 rounded-2xl border border-line bg-surface p-4 text-center shadow-sm transition-transform duration-200 active:scale-[0.97]"
     >
       {soon && (

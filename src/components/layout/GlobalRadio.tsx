@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { getSupabaseBrowser } from "@/lib/supabase/browser";
+import { useRef, useState } from "react";
 
 /*
   Qlobal kənd radiosu — layout səviyyəsindədir, ona görə səhifə
   keçidlərində SƏS KƏSİLMİR (Next.js layout naviqasiyada yenidən
   qurulmur; buradakı <audio> DOM elementi qorunur).
+
+  Stansiya siyahısı server tərəfdə (layout) oxunub prop kimi gəlir —
+  brauzerə supabase-js düşmür və hər səhifə açılışında əlavə şəbəkə
+  sorğusu getmir (PageSpeed optimallaşdırması).
 
   Yalnız canlı yayım (stream) stansiyaları üçün. Autoplay brauzer
   qaydası ilə yalnız istifadəçi düyməyə basandan sonra başlayır —
@@ -14,26 +17,14 @@ import { getSupabaseBrowser } from "@/lib/supabase/browser";
   bütün sayt boyu davam edir.
 */
 
-type Station = { id: string; title: string; url: string };
+export type Station = { id: string; title: string; url: string };
 
-export default function GlobalRadio() {
-  const [stations, setStations] = useState<Station[]>([]);
+export default function GlobalRadio({ stations }: { stations: Station[] }) {
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    const sb = getSupabaseBrowser();
-    if (!sb) return;
-    sb.from("radio_items")
-      .select("id, title, url")
-      .eq("status", "approved")
-      .eq("kind", "stream")
-      .order("sort_order")
-      .then(({ data }) => setStations((data ?? []) as Station[]));
-  }, []);
 
   if (stations.length === 0) return null;
   const current = stations[idx];

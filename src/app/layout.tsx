@@ -8,6 +8,7 @@ import GlobalRadio from "@/components/layout/GlobalRadio";
 import Footer from "@/components/layout/Footer";
 import { PREFS_BOOT_SCRIPT } from "@/lib/prefs";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { getRadioItems } from "@/lib/data";
 
 const lora = Lora({
   subsets: ["latin", "latin-ext"],
@@ -80,9 +81,15 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // Radio stansiyaları server tərəfdə oxunur — brauzerə supabase-js getmir,
+  // hər səhifə açılışında əlavə sorğu olmur
+  const radioStations = (await getRadioItems())
+    .filter((r) => r.kind === "stream")
+    .map((r) => ({ id: r.id, title: r.title, url: r.url }));
+
   return (
     <html lang="az" suppressHydrationWarning>
       <head>
@@ -98,7 +105,7 @@ export default function RootLayout({
           <Footer />
         </div>
         <SosFab />
-        <GlobalRadio />
+        <GlobalRadio stations={radioStations} />
         <BottomNav />
       </body>
     </html>

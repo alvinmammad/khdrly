@@ -27,6 +27,7 @@ export default function BottomNav() {
             <Link
               key={item.href}
               href={item.href}
+              prefetch={false} // hər səhifədə 5 marşrutun (o cümlədən ağır xəritənin) qabaqcadan yüklənməsinin qarşısı
               className={`flex min-h-16 flex-col items-center justify-center gap-0.5 py-1.5 ${
                 active ? "text-kerpic" : "text-ink-soft"
               }`}
